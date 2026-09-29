@@ -1,0 +1,6 @@
+{
+  "name": "Houston Insulation Service",
+  "description": "Residential, commercial, and industrial insulation contractor serving Houston, TX and Southeast Texas. Request a free estimate for attic, wall, floor, and spray foam insulation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
