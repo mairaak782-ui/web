@@ -12,23 +12,26 @@ import {
   X,
   Copy,
   Check,
+  Building,
+  Home,
+  Hammer,
+  Sparkles,
+  Shield,
 } from 'lucide-react';
 import {
   BUSINESS_INFO,
-  VERIFIED_SERVICES,
-  SERVICE_AREAS,
+  SERVICES_DATA,
   SITE_SECTIONS,
 } from '../data/siteContent';
 
 interface EstimateAndContactProps {
   prefilledService: string;
-  prefilledZip: string;
+  prefilledZip?: string;
   prefilledMessage: string;
   previousSection: string | null;
   onOpenPhoneModal: () => void;
   onScrollToSection: (sectionId: string) => void;
   onGoBackSection: () => void;
-  onSelectAreaForEstimate: (areaName: string, zipSample: string, fromSection?: string) => void;
   onSelectServiceForEstimate: (serviceName: string, note?: string, fromSection?: string) => void;
 }
 
@@ -38,7 +41,6 @@ interface FormState {
   email: string;
   propertyType: string;
   serviceNeeded: string;
-  zipCode: string;
   message: string;
 }
 
@@ -46,27 +48,23 @@ interface FormErrors {
   fullName?: string;
   phone?: string;
   email?: string;
-  zipCode?: string;
 }
 
 export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
   prefilledService,
-  prefilledZip,
   prefilledMessage,
   previousSection,
   onOpenPhoneModal,
   onScrollToSection,
   onGoBackSection,
-  onSelectAreaForEstimate,
   onSelectServiceForEstimate,
 }) => {
   const [formData, setFormData] = useState<FormState>({
     fullName: '',
     phone: '',
     email: '',
-    propertyType: 'Residential Home',
-    serviceNeeded: 'Attic & Roof Insulation',
-    zipCode: '',
+    propertyType: 'Residential',
+    serviceNeeded: 'Spray Foam Insulation',
     message: '',
   });
 
@@ -80,12 +78,6 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
       setFormData((prev) => ({ ...prev, serviceNeeded: prefilledService }));
     }
   }, [prefilledService]);
-
-  useEffect(() => {
-    if (prefilledZip) {
-      setFormData((prev) => ({ ...prev, zipCode: prefilledZip }));
-    }
-  }, [prefilledZip]);
 
   useEffect(() => {
     if (prefilledMessage) {
@@ -114,11 +106,6 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
       nextErrors.email = 'Please enter a valid email address.';
     }
 
-    const zipRegex = /^\d{5}(-\d{4})?$/;
-    if (!zipRegex.test(formData.zipCode.trim())) {
-      nextErrors.zipCode = 'Please enter a valid 5-digit ZIP code (e.g., 77008).';
-    }
-
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
   };
@@ -127,7 +114,7 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
     e.preventDefault();
     if (!validateForm()) return;
 
-    const refNum = `HIS-${Math.floor(100000 + Math.random() * 900000)}`;
+    const refNum = `HSF-${Math.floor(100000 + Math.random() * 900000)}`;
     const timestamp = new Date().toLocaleString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -147,14 +134,13 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
     if (!submittedRecord) return;
     const summaryText = [
       `Estimate Request Reference: ${submittedRecord.referenceId}`,
-      `Business: ${BUSINESS_INFO.name}`,
+      `Company: ${BUSINESS_INFO.name}`,
       `Name: ${submittedRecord.fullName}`,
       `Phone: ${submittedRecord.phone}`,
       `Email: ${submittedRecord.email}`,
       `Property Type: ${submittedRecord.propertyType}`,
       `Service Needed: ${submittedRecord.serviceNeeded}`,
-      `ZIP Code: ${submittedRecord.zipCode}`,
-      `Message: ${submittedRecord.message || 'N/A'}`,
+      `Message / Details: ${submittedRecord.message || 'N/A'}`,
     ].join('\n');
 
     navigator.clipboard?.writeText(summaryText);
@@ -164,19 +150,19 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
 
   return (
     <>
-      {/* SECTION 16: FREE ESTIMATE SECTION */}
+      {/* SECTION 9 & 12: ESTIMATE / LEAD FORM SECTION */}
       <section
         id="estimate"
         aria-labelledby="estimate-heading"
-        className="py-16 sm:py-20 lg:py-28 bg-slate-900 text-white border-b border-slate-800"
+        className="py-16 sm:py-20 lg:py-28 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white border-b border-slate-800 relative overflow-hidden"
       >
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Smooth Contextual Back Button Bar */}
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          {/* Navigation bar */}
           <div className="mb-8 flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-slate-800">
             <button
               type="button"
               onClick={onGoBackSection}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 text-xs sm:text-sm font-medium transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 text-xs sm:text-sm font-medium transition-colors cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4 text-orange-400" aria-hidden="true" />
               <span>Back to {previousSectionLabel}</span>
@@ -193,51 +179,50 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-            {/* Left Column: Supporting Copy & Direct Phone CTA */}
+            {/* Left Column: Supporting Info & Phone Card */}
             <div className="lg:col-span-5 space-y-8">
               <div>
-                <p className="text-xs font-medium text-orange-400">
-                  Complimentary Consultation · Houston &amp; Southeast Texas
+                <p className="text-xs font-semibold text-orange-400 uppercase tracking-wider">
+                  Complimentary Consultation · Houston, Texas
                 </p>
                 <h2
                   id="estimate-heading"
                   className="mt-2.5 text-2xl sm:text-4xl font-semibold text-white tracking-tight"
                 >
-                  Ready to Improve Your Home’s Comfort?
+                  Ready to Improve Your Property’s Insulation?
                 </h2>
-                <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed">
-                  Tell us about your residential, commercial, or industrial property. We will review your insulation needs, answer your questions, and arrange a complimentary estimate with no obligation.
+                <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
+                  Tell us about your residential or commercial project. We will review your insulation and air-sealing requirements and provide a complimentary, no-obligation estimate.
                 </p>
               </div>
 
-              {/* Attractive Phone CTA Card Beside Form */}
-              <div className="p-6 sm:p-7 rounded-2xl bg-slate-800/90 border border-slate-700/90 space-y-5 shadow-lg">
+              {/* Direct Phone Card */}
+              <div className="p-6 sm:p-7 rounded-2xl bg-slate-800/90 border border-slate-700/90 space-y-5 shadow-xl backdrop-blur-xs">
                 <div>
-                  <p className="text-xs text-orange-400 font-medium">
+                  <p className="text-xs text-orange-400 font-semibold uppercase tracking-wide">
                     Prefer to Speak Directly?
                   </p>
                   <h3 className="mt-1 text-xl font-semibold text-white">
-                    Call {BUSINESS_INFO.name}
+                    Talk With {BUSINESS_INFO.name}
                   </h3>
                   <p className="mt-2 text-sm text-slate-300 leading-relaxed">
-                    Reach our team during normal business hours (Monday – Friday) to discuss attic, wall cavity, spray foam, or floor insulation for your property.
+                    Call our team directly to discuss spray foam, attic retrofits, commercial buildings, or new construction insulation needs.
                   </p>
                 </div>
 
                 <div className="pt-1">
-                  <button
-                    type="button"
-                    onClick={onOpenPhoneModal}
-                    className="w-full inline-flex items-center justify-center gap-2.5 px-5 py-4 text-sm font-semibold text-slate-900 bg-white hover:bg-slate-100 rounded-xl shadow-sm transition-colors whitespace-nowrap cursor-pointer focus-visible:outline-2 focus-visible:outline-orange-400"
+                  <a
+                    href={BUSINESS_INFO.phoneTel}
+                    className="w-full inline-flex items-center justify-center gap-2.5 px-5 py-4 text-sm font-semibold text-slate-900 bg-white hover:bg-slate-100 rounded-xl shadow-md transition-all whitespace-nowrap active:scale-95"
                   >
                     <Phone className="w-4 h-4 text-orange-700 shrink-0" aria-hidden="true" />
-                    <span className="font-mono">CALL NOW: {BUSINESS_INFO.phoneDisplay}</span>
-                  </button>
+                    <span className="font-mono font-bold">Call {BUSINESS_INFO.phoneDisplay}</span>
+                  </a>
                 </div>
 
                 <div className="pt-4 border-t border-slate-700/80 flex flex-col gap-2 text-xs text-slate-300">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-slate-400">Verified Email:</span>
+                    <span className="text-slate-400">Direct Email:</span>
                     <a
                       href={`mailto:${BUSINESS_INFO.email}`}
                       className="font-mono text-white hover:text-orange-400 underline underline-offset-4 truncate"
@@ -246,42 +231,47 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                     </a>
                   </div>
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-slate-400">Office Hours:</span>
-                    <span>Monday – Friday</span>
+                    <span className="text-slate-400">Location:</span>
+                    <span>{BUSINESS_INFO.locationDisplay}</span>
                   </div>
                 </div>
               </div>
 
-              {/* What to Expect Summary */}
+              {/* What to Expect */}
               <div className="space-y-3 text-sm text-slate-300 border-t border-slate-800 pt-6">
-                <p className="font-semibold text-white">What happens after you submit:</p>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  01 · We review your property type, ZIP code, and insulation goals.
-                </p>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  02 · We follow up by phone or email to discuss your project and schedule an assessment.
-                </p>
-                <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                  03 · You receive a clear recommendation for the areas that will benefit your property most.
-                </p>
+                <p className="font-semibold text-white">What happens next:</p>
+                <div className="space-y-2">
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed flex items-start gap-2">
+                    <span className="font-mono font-semibold text-orange-400">01.</span>
+                    <span>We review your property type and insulation scope.</span>
+                  </p>
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed flex items-start gap-2">
+                    <span className="font-mono font-semibold text-orange-400">02.</span>
+                    <span>We follow up promptly by phone or email to schedule an on-site review.</span>
+                  </p>
+                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed flex items-start gap-2">
+                    <span className="font-mono font-semibold text-orange-400">03.</span>
+                    <span>You receive a clear, straightforward estimate with zero high-pressure tactics.</span>
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Right Column: Estimate Request Form */}
-            <div className="lg:col-span-7 bg-white text-slate-900 rounded-2xl border border-slate-200 p-5 sm:p-8 lg:p-10 shadow-xl">
+            {/* Right Column: Free Estimate Form */}
+            <div className="lg:col-span-7 bg-white text-slate-900 rounded-2xl border border-slate-200 p-6 sm:p-8 lg:p-10 shadow-2xl">
               {!submittedRecord ? (
                 <form onSubmit={handleSubmit} noValidate aria-label="Request a Free Estimate">
                   <div className="pb-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div>
                       <h3 className="text-xl sm:text-2xl font-semibold text-slate-900">
-                        Request Your Free Insulation Estimate
+                        Request a Free Estimate
                       </h3>
                       <p className="mt-1 text-xs sm:text-sm text-slate-600">
                         Complete the short form below. Fields marked with * are required.
                       </p>
                     </div>
-                    <span className="text-xs text-orange-800 bg-orange-50 border border-orange-200/80 px-2.5 py-1 rounded-md font-mono self-start sm:self-auto">
-                      Free Estimate
+                    <span className="text-xs text-orange-800 bg-orange-50 border border-orange-200/80 px-2.5 py-1 rounded-md font-mono self-start sm:self-auto font-semibold">
+                      100% Free
                     </span>
                   </div>
 
@@ -292,7 +282,7 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                         htmlFor="estimate-full-name"
                         className="block text-xs font-semibold text-slate-800 mb-1.5"
                       >
-                        Full Name *
+                        Name *
                       </label>
                       <input
                         id="estimate-full-name"
@@ -305,11 +295,11 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                           setFormData({ ...formData, fullName: e.target.value });
                           if (errors.fullName) setErrors({ ...errors, fullName: undefined });
                         }}
-                        placeholder="e.g., Michael Carter"
+                        placeholder="e.g., John Smith"
                         aria-invalid={Boolean(errors.fullName)}
                         aria-describedby={errors.fullName ? 'error-full-name' : undefined}
-                        className={`w-full px-3.5 py-3 text-sm rounded-lg border bg-slate-50/50 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors ${
-                          errors.fullName ? 'border-red-600' : 'border-slate-300'
+                        className={`w-full px-3.5 py-3 text-sm rounded-xl border bg-slate-50/70 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors ${
+                          errors.fullName ? 'border-red-600 ring-1 ring-red-500' : 'border-slate-300'
                         }`}
                       />
                       {errors.fullName && (
@@ -326,7 +316,7 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                         htmlFor="estimate-phone"
                         className="block text-xs font-semibold text-slate-800 mb-1.5"
                       >
-                        Phone Number *
+                        Phone *
                       </label>
                       <input
                         id="estimate-phone"
@@ -339,11 +329,11 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                           setFormData({ ...formData, phone: e.target.value });
                           if (errors.phone) setErrors({ ...errors, phone: undefined });
                         }}
-                        placeholder="e.g., (713) 555-0192"
+                        placeholder="e.g., (713) 555-0199"
                         aria-invalid={Boolean(errors.phone)}
                         aria-describedby={errors.phone ? 'error-phone' : undefined}
-                        className={`w-full px-3.5 py-3 text-sm rounded-lg border bg-slate-50/50 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors ${
-                          errors.phone ? 'border-red-600' : 'border-slate-300'
+                        className={`w-full px-3.5 py-3 text-sm rounded-xl border bg-slate-50/70 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors ${
+                          errors.phone ? 'border-red-600 ring-1 ring-red-500' : 'border-slate-300'
                         }`}
                       />
                       {errors.phone && (
@@ -355,12 +345,12 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                     </div>
 
                     {/* Email */}
-                    <div>
+                    <div className="sm:col-span-2">
                       <label
                         htmlFor="estimate-email"
                         className="block text-xs font-semibold text-slate-800 mb-1.5"
                       >
-                        Email Address *
+                        Email *
                       </label>
                       <input
                         id="estimate-email"
@@ -376,8 +366,8 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                         placeholder="you@example.com"
                         aria-invalid={Boolean(errors.email)}
                         aria-describedby={errors.email ? 'error-email' : undefined}
-                        className={`w-full px-3.5 py-3 text-sm rounded-lg border bg-slate-50/50 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors ${
-                          errors.email ? 'border-red-600' : 'border-slate-300'
+                        className={`w-full px-3.5 py-3 text-sm rounded-xl border bg-slate-50/70 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors ${
+                          errors.email ? 'border-red-600 ring-1 ring-red-500' : 'border-slate-300'
                         }`}
                       />
                       {errors.email && (
@@ -388,42 +378,7 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                       )}
                     </div>
 
-                    {/* ZIP Code */}
-                    <div>
-                      <label
-                        htmlFor="estimate-zip"
-                        className="block text-xs font-semibold text-slate-800 mb-1.5"
-                      >
-                        Property ZIP Code *
-                      </label>
-                      <input
-                        id="estimate-zip"
-                        name="zipCode"
-                        type="text"
-                        inputMode="numeric"
-                        autoComplete="postal-code"
-                        required
-                        value={formData.zipCode}
-                        onChange={(e) => {
-                          setFormData({ ...formData, zipCode: e.target.value });
-                          if (errors.zipCode) setErrors({ ...errors, zipCode: undefined });
-                        }}
-                        placeholder="e.g., 77008"
-                        aria-invalid={Boolean(errors.zipCode)}
-                        aria-describedby={errors.zipCode ? 'error-zip' : undefined}
-                        className={`w-full px-3.5 py-3 text-sm font-mono rounded-lg border bg-slate-50/50 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors ${
-                          errors.zipCode ? 'border-red-600' : 'border-slate-300'
-                        }`}
-                      />
-                      {errors.zipCode && (
-                        <p id="error-zip" className="mt-1.5 text-xs text-red-600 flex items-center gap-1 font-sans">
-                          <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                          <span>{errors.zipCode}</span>
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Property Type */}
+                    {/* Property Type Dropdown */}
                     <div>
                       <label
                         htmlFor="estimate-property-type"
@@ -436,16 +391,17 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                         name="propertyType"
                         value={formData.propertyType}
                         onChange={(e) => setFormData({ ...formData, propertyType: e.target.value })}
-                        className="w-full px-3.5 py-3 text-sm rounded-lg border border-slate-300 bg-slate-50/50 text-slate-900 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors"
+                        className="w-full px-3.5 py-3 text-sm rounded-xl border border-slate-300 bg-slate-50/70 text-slate-900 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors cursor-pointer"
                       >
-                        <option value="Residential Home">Residential Home</option>
-                        <option value="Commercial Building">Commercial Building</option>
-                        <option value="Industrial Facility">Industrial Facility</option>
-                        <option value="Multi-Family / Townhome">Multi-Family / Townhome</option>
+                        <option value="Residential">Residential</option>
+                        <option value="Commercial">Commercial</option>
+                        <option value="New Construction">New Construction</option>
+                        <option value="Renovation">Renovation</option>
+                        <option value="Other">Other</option>
                       </select>
                     </div>
 
-                    {/* Service Needed */}
+                    {/* Service Needed Dropdown */}
                     <div>
                       <label
                         htmlFor="estimate-service-needed"
@@ -458,24 +414,23 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                         name="serviceNeeded"
                         value={formData.serviceNeeded}
                         onChange={(e) => setFormData({ ...formData, serviceNeeded: e.target.value })}
-                        className="w-full px-3.5 py-3 text-sm rounded-lg border border-slate-300 bg-slate-50/50 text-slate-900 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors"
+                        className="w-full px-3.5 py-3 text-sm rounded-xl border border-slate-300 bg-slate-50/70 text-slate-900 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors cursor-pointer"
                       >
-                        <option value="Attic & Roof Insulation">Attic, Roof &amp; Loft Insulation</option>
-                        <option value="Wall Cavity Insulation">Cavity &amp; Interior Wall Insulation</option>
                         <option value="Spray Foam Insulation">Spray Foam Insulation</option>
-                        <option value="Floor & Foundation Insulation">Floor, Foundation &amp; Crawl Space Insulation</option>
-                        <option value="Removal & Radiant Barriers">Insulation Removal &amp; Radiant Barrier</option>
-                        <option value="Not Sure — Recommend a Solution">Not Sure — Need Professional Assessment</option>
+                        <option value="Attic Insulation">Attic Insulation</option>
+                        <option value="Residential Insulation">Residential Insulation</option>
+                        <option value="Commercial Insulation">Commercial Insulation</option>
+                        <option value="Not Sure">Not Sure</option>
                       </select>
                     </div>
 
-                    {/* Message */}
+                    {/* Message / Project Details */}
                     <div className="sm:col-span-2">
                       <label
                         htmlFor="estimate-message"
                         className="block text-xs font-semibold text-slate-800 mb-1.5"
                       >
-                        Project Details or Comfort Issues (Optional)
+                        Message (Optional)
                       </label>
                       <textarea
                         id="estimate-message"
@@ -483,22 +438,22 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                         rows={3}
                         value={formData.message}
                         onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        placeholder="Tell us about warm rooms, attic condition, square footage, or questions you would like us to cover..."
-                        className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-slate-300 bg-slate-50/50 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors"
+                        placeholder="Tell us about your property, specific areas of concern, or estimated project timeline..."
+                        className="w-full px-3.5 py-3 text-sm rounded-xl border border-slate-300 bg-slate-50/70 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors"
                       />
                     </div>
                   </div>
 
-                  <div className="mt-7 pt-5 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="mt-7 pt-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
                     <p className="text-xs text-slate-500">
-                      Your contact details are used solely to respond to your insulation estimate inquiry.
+                      Your information is kept strictly private.
                     </p>
                     <button
                       type="submit"
-                      className="group inline-flex items-center justify-center gap-2.5 px-7 py-4 text-sm font-semibold text-white bg-gradient-to-b from-orange-600 to-orange-700 hover:from-orange-500 hover:to-orange-700 rounded-xl shadow-md shadow-orange-950/20 transition-all whitespace-nowrap shrink-0 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-semibold text-white bg-gradient-to-b from-orange-600 to-orange-700 hover:from-orange-500 hover:to-orange-700 rounded-xl shadow-md cta-glow transition-all cursor-pointer whitespace-nowrap active:scale-95"
                     >
-                      <span>REQUEST A FREE ESTIMATE</span>
-                      <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+                      <span>Request a Free Estimate</span>
+                      <ArrowRight className="w-4 h-4" aria-hidden="true" />
                     </button>
                   </div>
                 </form>
@@ -508,13 +463,13 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                     <CheckCircle2 className="w-7 h-7 text-emerald-600 shrink-0 mt-0.5" aria-hidden="true" />
                     <div>
                       <p className="text-xs font-mono text-slate-500">
-                        ESTIMATE REQUEST LOGGED · REF {submittedRecord.referenceId}
+                        ESTIMATE INQUIRY LOGGED · REF {submittedRecord.referenceId}
                       </p>
                       <h3 className="mt-1 text-2xl font-semibold text-slate-900">
                         Thank You, {submittedRecord.fullName}
                       </h3>
                       <p className="mt-1.5 text-sm text-slate-600 leading-relaxed">
-                        Your estimate inquiry for <strong className="text-slate-900">{submittedRecord.serviceNeeded}</strong> in ZIP code <strong className="font-mono text-slate-900">{submittedRecord.zipCode}</strong> has been prepared.
+                        Your inquiry for <strong className="text-slate-900">{submittedRecord.serviceNeeded}</strong> has been generated.
                       </p>
                     </div>
                   </div>
@@ -529,7 +484,7 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                       <span className="font-medium text-slate-900">{submittedRecord.serviceNeeded}</span>
                     </div>
                     <div className="flex justify-between py-1 border-b border-slate-200/70">
-                      <span className="text-slate-500">Contact Phone &amp; Email:</span>
+                      <span className="text-slate-500">Contact:</span>
                       <span className="font-mono text-slate-900">
                         {submittedRecord.phone} · {submittedRecord.email}
                       </span>
@@ -545,30 +500,30 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                   <div className="flex flex-wrap items-center gap-3 pt-2">
                     <a
                       href={`mailto:${BUSINESS_INFO.email}?subject=${encodeURIComponent(
-                        `Free Estimate Request (${submittedRecord.referenceId}) - ${submittedRecord.serviceNeeded}`
+                        `Estimate Request (${submittedRecord.referenceId}) - ${submittedRecord.serviceNeeded}`
                       )}&body=${encodeURIComponent(
-                        `Hello Houston Insulation Service,\n\nI would like to request a free estimate:\n\nName: ${submittedRecord.fullName}\nPhone: ${submittedRecord.phone}\nEmail: ${submittedRecord.email}\nProperty Type: ${submittedRecord.propertyType}\nService Needed: ${submittedRecord.serviceNeeded}\nZIP Code: ${submittedRecord.zipCode}\nNotes: ${submittedRecord.message || 'N/A'}\n`
+                        `Hello Houston Spray Foam Insulation,\n\nI would like to request an estimate:\n\nName: ${submittedRecord.fullName}\nPhone: ${submittedRecord.phone}\nEmail: ${submittedRecord.email}\nProperty Type: ${submittedRecord.propertyType}\nService Needed: ${submittedRecord.serviceNeeded}\nMessage: ${submittedRecord.message || 'N/A'}\n`
                       )}`}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-orange-700 hover:bg-orange-800 rounded-lg transition-colors whitespace-nowrap"
+                      className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-orange-700 hover:bg-orange-800 rounded-xl transition-colors whitespace-nowrap cta-glow active:scale-95"
                     >
                       <Mail className="w-4 h-4" aria-hidden="true" />
-                      <span>Send Directly via Email Client ({BUSINESS_INFO.email})</span>
+                      <span>Send Email ({BUSINESS_INFO.email})</span>
                     </a>
 
                     <button
                       type="button"
                       onClick={handleCopyConfirmation}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors whitespace-nowrap cursor-pointer"
+                      className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors whitespace-nowrap cursor-pointer active:scale-95"
                     >
                       {copiedSummary ? (
                         <>
                           <Check className="w-4 h-4 text-emerald-600" aria-hidden="true" />
-                          <span>Request Summary Copied</span>
+                          <span>Summary Copied</span>
                         </>
                       ) : (
                         <>
                           <Copy className="w-4 h-4" aria-hidden="true" />
-                          <span>Copy Request Summary</span>
+                          <span>Copy Summary</span>
                         </>
                       )}
                     </button>
@@ -576,7 +531,7 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                     <button
                       type="button"
                       onClick={() => setSubmittedRecord(null)}
-                      className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg cursor-pointer"
+                      className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl cursor-pointer"
                     >
                       <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
                       <span>Back to Form</span>
@@ -589,7 +544,7 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
         </div>
       </section>
 
-      {/* SECTION 17: CONTACT SECTION */}
+      {/* SECTION 10: CONTACT SECTION */}
       <section
         id="contact"
         aria-labelledby="contact-heading"
@@ -598,14 +553,14 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-10 border-b border-slate-200">
             <div>
-              <p className="text-xs font-medium text-orange-700">
-                Contact Information · Greater Houston Service
+              <p className="text-xs font-semibold text-orange-700 uppercase tracking-wider">
+                Direct Contact · Houston, Texas
               </p>
               <h2
                 id="contact-heading"
                 className="mt-2.5 text-2xl sm:text-4xl font-semibold text-slate-900 tracking-tight"
               >
-                Get in Touch with {BUSINESS_INFO.name}
+                Contact {BUSINESS_INFO.name}
               </h2>
             </div>
             <button
@@ -613,49 +568,48 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
               onClick={() => setLegalModalType('standards')}
               className="text-xs font-medium text-slate-600 hover:text-orange-700 underline underline-offset-4 self-start lg:self-auto cursor-pointer"
             >
-              Our Service Standards &amp; Commitment
+              Our Service Standards &amp; Approach
             </button>
           </div>
 
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Phone Card */}
-            <div className="p-6 rounded-xl border border-slate-200 bg-slate-50/70 flex flex-col justify-between">
+            <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col justify-between card-hover hover:border-slate-300 hover:shadow-md transition-all">
               <div>
                 <div className="flex items-center justify-between text-xs text-slate-500">
-                  <span>Phone Dispatch</span>
+                  <span className="font-medium">Direct Phone</span>
                   <Phone className="w-4 h-4 text-orange-700" aria-hidden="true" />
                 </div>
-                <p className="mt-3 font-mono text-base font-semibold text-slate-900">
+                <p className="mt-3 font-mono text-base font-bold text-slate-900">
                   {BUSINESS_INFO.phoneDisplay}
                 </p>
                 <p className="mt-2 text-xs text-slate-600 leading-relaxed">
-                  {BUSINESS_INFO.phoneVerificationNote}
+                  {BUSINESS_INFO.phoneNote}
                 </p>
               </div>
               <div className="mt-5 pt-4 border-t border-slate-200/80">
-                <button
-                  type="button"
-                  onClick={onOpenPhoneModal}
-                  className="text-xs font-semibold text-orange-700 hover:text-orange-800 inline-flex items-center gap-1.5 cursor-pointer"
+                <a
+                  href={BUSINESS_INFO.phoneTel}
+                  className="text-xs font-semibold text-orange-700 hover:text-orange-800 inline-flex items-center gap-1.5"
                 >
-                  <span>Call Dispatch Line</span>
+                  <span>Call {BUSINESS_INFO.phoneDisplay}</span>
                   <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                </button>
+                </a>
               </div>
             </div>
 
             {/* Email Card */}
-            <div className="p-6 rounded-xl border border-slate-200 bg-slate-50/70 flex flex-col justify-between">
+            <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col justify-between card-hover hover:border-slate-300 hover:shadow-md transition-all">
               <div>
                 <div className="flex items-center justify-between text-xs text-slate-500">
-                  <span>Direct Email</span>
+                  <span className="font-medium">Email</span>
                   <Mail className="w-4 h-4 text-orange-700" aria-hidden="true" />
                 </div>
-                <p className="mt-3 font-mono text-sm font-semibold text-slate-900 break-all">
+                <p className="mt-3 font-mono text-xs sm:text-sm font-semibold text-slate-900 break-all">
                   {BUSINESS_INFO.email}
                 </p>
                 <p className="mt-2 text-xs text-slate-600 leading-relaxed">
-                  Email us anytime with your property details, questions, or requests for a free estimate.
+                  Send your project details, questions, or estimate inquiries anytime.
                 </p>
               </div>
               <div className="mt-5 pt-4 border-t border-slate-200/80">
@@ -663,67 +617,67 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                   href={`mailto:${BUSINESS_INFO.email}`}
                   className="text-xs font-semibold text-orange-700 hover:text-orange-800 inline-flex items-center gap-1.5"
                 >
-                  <span>Send Email Inquiry</span>
+                  <span>Send Email</span>
                   <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </a>
               </div>
             </div>
 
             {/* Business Hours Card */}
-            <div className="p-6 rounded-xl border border-slate-200 bg-slate-50/70 flex flex-col justify-between">
+            <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col justify-between card-hover hover:border-slate-300 hover:shadow-md transition-all">
               <div>
                 <div className="flex items-center justify-between text-xs text-slate-500">
-                  <span>Business Hours</span>
+                  <span className="font-medium">Business Hours</span>
                   <Clock className="w-4 h-4 text-orange-700" aria-hidden="true" />
                 </div>
                 <p className="mt-3 text-sm font-semibold text-slate-900">
                   Monday – Friday
                 </p>
-                <p className="mt-1 font-mono text-xs text-orange-800">
+                <p className="mt-1 font-mono text-xs text-orange-800 font-semibold">
                   7:00 AM – 6:00 PM
                 </p>
                 <p className="mt-2 text-xs text-slate-600 leading-relaxed">
-                  Available during normal weekday business hours. Online estimate requests are accepted 24/7.
+                  Available for weekday phone consultations. Online inquiries accepted 24/7.
                 </p>
               </div>
               <div className="mt-5 pt-4 border-t border-slate-200/80 text-xs text-slate-500">
-                Saturday: 8:00 AM – 2:00 PM (By Appointment)
+                Saturday: By Appointment
               </div>
             </div>
 
-            {/* Service Area & Address Card */}
-            <div className="p-6 rounded-xl border border-slate-200 bg-slate-50/70 flex flex-col justify-between">
+            {/* Location Card */}
+            <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col justify-between card-hover hover:border-slate-300 hover:shadow-md transition-all">
               <div>
                 <div className="flex items-center justify-between text-xs text-slate-500">
-                  <span>Location &amp; Service Area</span>
+                  <span className="font-medium">Location</span>
                   <MapPin className="w-4 h-4 text-orange-700" aria-hidden="true" />
                 </div>
                 <p className="mt-3 text-sm font-semibold text-slate-900">
-                  {BUSINESS_INFO.addressDisplay}
+                  {BUSINESS_INFO.locationDisplay}
                 </p>
                 <p className="mt-2 text-xs text-slate-600 leading-relaxed">
-                  Serving Greater Houston, Cypress, Champions, Tomball, Stafford, Richmond, Rosenberg, and Southeast Texas.
+                  Serving residential and commercial properties throughout Houston, TX.
                 </p>
               </div>
               <div className="mt-5 pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-500">
-                {BUSINESS_INFO.mapsDisplay}
+                Houston, Texas &amp; Greater Metro
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* SECTION 18: FOOTER (with extra bottom padding on mobile so sticky action bar never overlaps) */}
+      {/* SECTION 13: FOOTER */}
       <footer className="bg-slate-950 text-slate-400 pt-16 pb-28 lg:pb-16 border-t border-slate-900">
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-slate-800/80">
             {/* Brand & Summary */}
-            <div className="lg:col-span-4 space-y-4">
+            <div className="lg:col-span-5 space-y-4">
               <p className="font-editorial text-xl font-semibold text-white tracking-tight">
                 {BUSINESS_INFO.name}
               </p>
               <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
-                Residential, commercial, and industrial thermal insulation services in Houston and Southeast Texas. Dedicated to helping property owners improve indoor comfort and reduce unwanted heat transfer.
+                Professional spray foam and thermal insulation solutions for residential and commercial properties in Houston, TX. Helping property owners improve indoor comfort and air sealing.
               </p>
               <div className="pt-2 flex flex-wrap items-center gap-3">
                 <a
@@ -732,15 +686,15 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                     e.preventDefault();
                     onScrollToSection('estimate');
                   }}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-white bg-gradient-to-b from-orange-600 to-orange-700 hover:from-orange-500 hover:to-orange-700 rounded-lg transition-all whitespace-nowrap"
+                  className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-white bg-gradient-to-b from-orange-600 to-orange-700 hover:from-orange-500 hover:to-orange-700 rounded-xl transition-all whitespace-nowrap cta-glow active:scale-95"
                 >
-                  <span>Get a Free Estimate</span>
+                  <span>Request a Free Estimate</span>
                   <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </a>
                 <button
                   type="button"
                   onClick={() => onScrollToSection('top')}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-lg transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl transition-colors cursor-pointer active:scale-95"
                 >
                   <ArrowUp className="w-3.5 h-3.5 text-orange-400" aria-hidden="true" />
                   <span>Back to Top</span>
@@ -748,13 +702,13 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
               </div>
             </div>
 
-            {/* Verified Services */}
+            {/* Services Links */}
             <div className="lg:col-span-3 space-y-3">
-              <p className="text-xs font-semibold text-white tracking-wide">
-                Insulation Services
+              <p className="text-xs font-semibold text-white uppercase tracking-wider">
+                Services
               </p>
               <ul className="space-y-2 text-xs sm:text-sm">
-                {VERIFIED_SERVICES.map((service) => (
+                {SERVICES_DATA.map((service) => (
                   <li key={service.id}>
                     <button
                       type="button"
@@ -768,38 +722,44 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
               </ul>
             </div>
 
-            {/* Service Areas */}
+            {/* Navigation Links */}
             <div className="lg:col-span-2 space-y-3">
-              <p className="text-xs font-semibold text-white tracking-wide">
-                Service Areas
+              <p className="text-xs font-semibold text-white uppercase tracking-wider">
+                Navigation
               </p>
               <ul className="space-y-2 text-xs sm:text-sm">
-                {SERVICE_AREAS.map((area) => (
-                  <li key={area.id}>
+                {[
+                  { id: 'top', label: 'Home' },
+                  { id: 'services', label: 'Services' },
+                  { id: 'why-spray-foam', label: 'Why Spray Foam' },
+                  { id: 'houston-solutions', label: 'Houston Solutions' },
+                  { id: 'process', label: 'Our Process' },
+                  { id: 'faq', label: 'FAQ' },
+                  { id: 'contact', label: 'Contact' },
+                ].map((item) => (
+                  <li key={item.id}>
                     <button
                       type="button"
-                      onClick={() =>
-                        onSelectAreaForEstimate(
-                          area.name,
-                          area.zipExamples.split(',')[0].trim(),
-                          'contact'
-                        )
-                      }
+                      onClick={() => onScrollToSection(item.id)}
                       className="text-left text-slate-400 hover:text-white transition-colors cursor-pointer"
                     >
-                      {area.name.split(' (')[0]}
+                      {item.label}
                     </button>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Direct Contact Details */}
-            <div className="lg:col-span-3 space-y-3 text-xs sm:text-sm">
-              <p className="text-xs font-semibold text-white tracking-wide">
-                Contact &amp; Dispatch
+            {/* Contact Details */}
+            <div className="lg:col-span-2 space-y-3 text-xs sm:text-sm">
+              <p className="text-xs font-semibold text-white uppercase tracking-wider">
+                Contact
               </p>
-              <p className="text-slate-300 font-mono">{BUSINESS_INFO.phoneDisplay}</p>
+              <p>
+                <a href={BUSINESS_INFO.phoneTel} className="text-slate-300 hover:text-white font-mono font-semibold">
+                  {BUSINESS_INFO.phoneDisplay}
+                </a>
+              </p>
               <p>
                 <a
                   href={`mailto:${BUSINESS_INFO.email}`}
@@ -808,15 +768,15 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                   {BUSINESS_INFO.email}
                 </a>
               </p>
-              <p className="text-slate-400">{BUSINESS_INFO.addressDisplay}</p>
-              <p className="text-slate-400">Mon – Fri (Normal Business Hours)</p>
+              <p className="text-slate-400">{BUSINESS_INFO.locationDisplay}</p>
+              <p className="text-slate-400">{BUSINESS_INFO.hoursDisplay}</p>
             </div>
           </div>
 
-          {/* Bottom Legal & Copyright Bar */}
+          {/* Bottom Legal Bar */}
           <div className="pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-slate-500">
             <p>
-              &copy; {new Date().getFullYear()} {BUSINESS_INFO.name}. All rights reserved. Serving Houston &amp; Southeast Texas.
+              &copy; {new Date().getFullYear()} {BUSINESS_INFO.name}. All rights reserved. Houston, TX.
             </p>
             <div className="flex flex-wrap items-center gap-5">
               <button
@@ -825,6 +785,13 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                 className="hover:text-slate-300 transition-colors cursor-pointer"
               >
                 Privacy Policy
+              </button>
+              <button
+                type="button"
+                onClick={() => setLegalModalType('terms')}
+                className="hover:text-slate-300 transition-colors cursor-pointer"
+              >
+                Terms of Service
               </button>
               <button
                 type="button"
@@ -846,12 +813,12 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
           aria-labelledby="legal-modal-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-xs"
         >
-          <div className="bg-white border border-slate-200 rounded-xl max-w-xl w-full p-6 sm:p-8 shadow-2xl max-h-[85vh] overflow-y-auto">
+          <div className="bg-white border border-slate-200 rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl max-h-[85vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between pb-4 border-b border-slate-200">
               <h3 id="legal-modal-title" className="text-xl font-semibold text-slate-900">
                 {legalModalType === 'privacy' && 'Privacy Policy'}
                 {legalModalType === 'terms' && 'Terms of Service'}
-                {legalModalType === 'standards' && 'Our Service Standards & Quality Commitment'}
+                {legalModalType === 'standards' && 'Our Service Standards & Commitment'}
               </h3>
               <button
                 type="button"
@@ -867,10 +834,10 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
               {legalModalType === 'privacy' && (
                 <>
                   <p>
-                    <strong className="text-slate-900">{BUSINESS_INFO.name}</strong> respects your privacy. Information submitted through our Free Estimate request form—including your name, phone number, email address, ZIP code, and project notes—is collected solely for the purpose of responding to your inquiry and providing residential or commercial insulation consultations.
+                    <strong className="text-slate-900">{BUSINESS_INFO.name}</strong> respects your privacy. Information submitted through our estimate request form—including your name, phone number, email address, property type, and project notes—is collected solely for the purpose of responding to your inquiry and discussing insulation solutions for your property.
                   </p>
                   <p>
-                    We do not sell or rent your personal contact information to third-party lead brokers. To request updates or removal of your inquiry information, contact us at{' '}
+                    We do not sell or rent your personal contact information to third-party lead brokers. If you have questions regarding your inquiry details, contact us at{' '}
                     <span className="font-mono text-slate-900">{BUSINESS_INFO.email}</span>.
                   </p>
                 </>
@@ -879,10 +846,10 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
               {legalModalType === 'terms' && (
                 <>
                   <p>
-                    All educational content and conceptual building-science descriptions on this website are provided for general informational purposes. Actual thermal performance and project scope depend on on-site inspection of your specific residential, commercial, or industrial structure.
+                    All building-science descriptions, educational summaries, and climate considerations on this website are provided for general informational purposes. Actual thermal performance and installation scope depend on an on-site evaluation of your specific residential or commercial structure in Houston, TX.
                   </p>
                   <p>
-                    Project estimates, material specifications, timelines, and terms are confirmed in writing prior to the start of any installation or insulation removal work by <strong className="text-slate-900">{BUSINESS_INFO.name}</strong>.
+                    Project estimates, material recommendations, timelines, and terms are confirmed prior to scheduling insulation work with <strong className="text-slate-900">{BUSINESS_INFO.name}</strong>.
                   </p>
                 </>
               )}
@@ -890,24 +857,20 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
               {legalModalType === 'standards' && (
                 <>
                   <p className="text-slate-800 font-medium">
-                    At <strong className="text-slate-900">{BUSINESS_INFO.name}</strong>, our work is guided by strict building-science principles and local Houston climate expertise:
+                    At <strong className="text-slate-900">{BUSINESS_INFO.name}</strong>, we are committed to professional service standards:
                   </p>
-                  <ul className="space-y-2.5 text-xs sm:text-sm text-slate-700 bg-slate-50 p-4 rounded-lg border border-slate-200">
-                    <li className="flex items-start gap-2">
+                  <ul className="space-y-2.5 text-xs sm:text-sm text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <li className="flex items-start gap-2.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-2 shrink-0" />
-                      <span><strong>On-Site Property Assessment:</strong> We inspect existing attic depths, roof rafters, wall cavities, and subfloors before recommending materials.</span>
+                      <span><strong>On-Site Property Review:</strong> We discuss your building layout, attic accessibility, or commercial structure before recommending an application.</span>
                     </li>
-                    <li className="flex items-start gap-2">
+                    <li className="flex items-start gap-2.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-2 shrink-0" />
-                      <span><strong>Air-Sealing Priority:</strong> We target ceiling penetrations and draft points before adding insulation for optimal thermal barrier performance.</span>
+                      <span><strong>Air-Sealing &amp; Thermal Focus:</strong> We prioritize continuous air barriers to restrict uncontrolled outdoor air and humidity infiltration.</span>
                     </li>
-                    <li className="flex items-start gap-2">
+                    <li className="flex items-start gap-2.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-2 shrink-0" />
-                      <span><strong>Clean &amp; Respectful Execution:</strong> Complete containment during old insulation extraction and spotless cleanup upon completion.</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-2 shrink-0" />
-                      <span><strong>Transparent Written Estimates:</strong> No hidden fees, clear scope of work, and friendly service throughout Greater Houston.</span>
+                      <span><strong>Transparent Written Estimates:</strong> Clear scope of work, straightforward communication, and no high-pressure sales tactics.</span>
                     </li>
                   </ul>
                 </>
@@ -918,7 +881,7 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
               <button
                 type="button"
                 onClick={() => setLegalModalType(null)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Back to Page</span>
@@ -929,9 +892,9 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
                   setLegalModalType(null);
                   onScrollToSection('estimate');
                 }}
-                className="px-4 py-2 text-xs font-semibold text-white bg-orange-700 hover:bg-orange-800 rounded-lg cursor-pointer"
+                className="px-4 py-2 text-xs font-semibold text-white bg-orange-700 hover:bg-orange-800 rounded-xl cursor-pointer shadow-xs active:scale-95"
               >
-                Get a Free Estimate
+                Request a Free Estimate
               </button>
             </div>
           </div>
