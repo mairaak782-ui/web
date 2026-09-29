@@ -59,6 +59,18 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock body scroll when modal is open to prevent background jank on mobile
+  useEffect(() => {
+    if (phoneModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [phoneModalOpen]);
+
   const scrollToSection = (sectionId: string, fromSectionOverride?: string) => {
     const origin = fromSectionOverride || activeSection;
     if (origin && origin !== sectionId) {
@@ -130,7 +142,7 @@ export default function App() {
       />
 
       {/* Main Content Sections */}
-      <main id="main-content" className="flex-1">
+      <main id="main-content" className="flex-1 pb-16 sm:pb-0">
         {/* Hero & Services & Trust Strip */}
         <HeroAndServices
           onOpenPhoneModal={() => setPhoneModalOpen(true)}

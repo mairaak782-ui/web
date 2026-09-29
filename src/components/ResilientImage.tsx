@@ -18,7 +18,7 @@ export const ResilientImage: React.FC<ResilientImageProps> = ({
   containerClassName = 'relative overflow-hidden bg-slate-900',
   loading = 'eager',
   priority = false,
-  fallbackTitle = 'Houston Insulation Service',
+  fallbackTitle = 'Dr Foam Insulation Ltd.',
 }) => {
   const [hasError, setHasError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -64,7 +64,7 @@ export const ResilientImage: React.FC<ResilientImageProps> = ({
           aria-label={alt}
           className="w-full h-full min-h-[220px] flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-200"
         >
-          <div className="w-12 h-12 rounded-lg bg-slate-800/90 border border-slate-700 flex items-center justify-center mb-3 text-orange-400">
+          <div className="w-12 h-12 rounded-lg bg-slate-800/90 border border-slate-700 flex items-center justify-center mb-3 text-emerald-400">
             <Layers className="w-6 h-6" aria-hidden="true" />
           </div>
           <p className="font-editorial text-sm font-medium text-white max-w-xs">{fallbackTitle}</p>
