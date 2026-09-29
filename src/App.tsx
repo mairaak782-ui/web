@@ -9,10 +9,13 @@ import {
   X,
   Copy,
   Check,
+  Instagram,
+  ExternalLink,
 } from 'lucide-react';
 import {
   BUSINESS_INFO,
   SITE_SECTIONS,
+  IMAGES,
   preloadSiteImages,
 } from './data/siteContent';
 import { Header } from './components/Header';
@@ -108,11 +111,11 @@ export default function App() {
   const canStepNext = currentSectionIndex < SITE_SECTIONS.length - 1;
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans overflow-x-hidden">
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-sans overflow-x-hidden selection:bg-emerald-500 selection:text-white">
       {/* Accessibility Skip Link */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-orange-700 focus:text-white focus:rounded-lg focus:shadow-xl focus:outline-none"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-emerald-700 focus:text-white focus:rounded-lg focus:shadow-xl focus:outline-none"
       >
         Skip to main content
       </a>
@@ -135,13 +138,14 @@ export default function App() {
           onScrollToSection={scrollToSection}
         />
 
-        {/* Why Spray Foam, Houston Solutions, 4-Step Process, Trust, FAQ */}
+        {/* Why Spray Foam, Ontario Solutions, 4-Step Process, Trust, FAQ */}
         <InteractiveSections
           onSelectServiceForEstimate={handleSelectServiceForEstimate}
           onOpenPhoneModal={() => setPhoneModalOpen(true)}
+          onScrollToSection={scrollToSection}
         />
 
-        {/* Free Estimate Form, Contact Details, Footer */}
+        {/* Lead Quote Form & Contact Section */}
         <EstimateAndContact
           prefilledService={prefilledService}
           prefilledMessage={prefilledMessage}
@@ -153,192 +157,176 @@ export default function App() {
         />
       </main>
 
-      {/* DESKTOP FLOATING SECTION NAVIGATOR */}
+      {/* FLOATING SECTION NAVIGATION ELEVATOR */}
       {showFloatingNav && (
-        <div
-          aria-label="Section Navigation"
-          className="hidden lg:flex fixed bottom-6 right-6 z-30 items-center gap-1.5 p-1.5 rounded-xl bg-slate-900/95 text-white border border-slate-700/90 shadow-xl backdrop-blur-md"
+        <aside
+          aria-label="Floating section navigation"
+          className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-30 flex flex-col items-end gap-2 animate-in fade-in duration-300"
         >
-          <button
-            type="button"
-            disabled={!canStepPrev}
-            onClick={() => handleStepSection('prev')}
-            title="Scroll to previous section"
-            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium text-slate-200 hover:text-white hover:bg-slate-800 disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
-          >
-            <ArrowUp className="w-3.5 h-3.5 text-orange-400" aria-hidden="true" />
-            <span>Prev</span>
-          </button>
+          {/* Active section capsule */}
+          <div className="hidden sm:flex items-center gap-2 bg-slate-900/90 backdrop-blur-md text-white px-3 py-1.5 rounded-full shadow-lg border border-slate-700 text-xs font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <span>
+              {SITE_SECTIONS.find((s) => s.id === activeSection)?.label || 'Overview'}
+            </span>
+          </div>
 
-          <button
-            type="button"
-            disabled={!canStepNext}
-            onClick={() => handleStepSection('next')}
-            title="Scroll to next section"
-            className="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-medium text-slate-200 hover:text-white hover:bg-slate-800 disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
-          >
-            <span>Next</span>
-            <ArrowDown className="w-3.5 h-3.5 text-orange-400" aria-hidden="true" />
-          </button>
+          <div className="flex items-center gap-1.5 bg-slate-900/95 backdrop-blur-md p-1.5 rounded-2xl shadow-xl border border-slate-700 text-white">
+            {previousSection && previousSection !== activeSection && (
+              <button
+                type="button"
+                onClick={handleGoBackSection}
+                className="p-2 rounded-xl bg-slate-800 hover:bg-emerald-700 text-emerald-400 hover:text-white transition-all cursor-pointer"
+                title="Return to previous section"
+                aria-label="Return to previous section"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </button>
+            )}
 
-          <div className="h-4 w-px bg-slate-700 mx-0.5" aria-hidden="true" />
+            <button
+              type="button"
+              disabled={!canStepPrev}
+              onClick={() => handleStepSection('prev')}
+              className={`p-2 rounded-xl transition-all cursor-pointer ${
+                canStepPrev
+                  ? 'hover:bg-slate-800 text-slate-200'
+                  : 'opacity-30 cursor-not-allowed text-slate-500'
+              }`}
+              title="Previous section"
+              aria-label="Previous section"
+            >
+              <ArrowUp className="w-4 h-4" />
+            </button>
 
-          <button
-            type="button"
-            onClick={() => scrollToSection('estimate')}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold text-white bg-gradient-to-b from-orange-600 to-orange-700 hover:from-orange-500 hover:to-orange-700 transition-all cursor-pointer"
-          >
-            <span>Free Estimate</span>
-            <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-          </button>
-        </div>
+            <button
+              type="button"
+              disabled={!canStepNext}
+              onClick={() => handleStepSection('next')}
+              className={`p-2 rounded-xl transition-all cursor-pointer ${
+                canStepNext
+                  ? 'hover:bg-slate-800 text-slate-200'
+                  : 'opacity-30 cursor-not-allowed text-slate-500'
+              }`}
+              title="Next section"
+              aria-label="Next section"
+            >
+              <ArrowDown className="w-4 h-4" />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => scrollToSection('estimate', activeSection)}
+              className="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-md transition-all cursor-pointer ml-1"
+            >
+              Estimate
+            </button>
+          </div>
+        </aside>
       )}
 
-      {/* MOBILE STICKY BOTTOM ACTION BAR */}
-      <div
-        role="region"
-        aria-label="Quick mobile contact actions"
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 p-2 sm:p-2.5 px-3 sm:px-4 shadow-2xl flex items-center gap-2"
-      >
-        {showFloatingNav && (
-          <button
-            type="button"
-            onClick={() => handleStepSection('prev')}
-            aria-label="Go to previous section"
-            className="inline-flex items-center justify-center gap-1 py-3 px-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold border border-slate-300/80 shrink-0 cursor-pointer"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 text-orange-700" aria-hidden="true" />
-            <span>Prev</span>
-          </button>
-        )}
-
+      {/* MOBILE PERSISTENT QUICK-ACTION BAR */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 p-2.5 px-4 flex items-center gap-3">
         <a
           href={BUSINESS_INFO.phoneTel}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-semibold whitespace-nowrap border border-slate-300/90"
+          className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-slate-900 border border-slate-700 text-white font-bold text-xs"
         >
-          <Phone className="w-3.5 h-3.5 text-orange-700 shrink-0" aria-hidden="true" />
-          <span>Call {BUSINESS_INFO.phoneDisplay}</span>
+          <Phone className="w-4 h-4 text-emerald-400" />
+          <span>Call 705-733-1163</span>
         </a>
 
         <button
           type="button"
-          onClick={() => scrollToSection('estimate')}
-          className="flex-[1.25] inline-flex items-center justify-center gap-1.5 py-3 px-3.5 rounded-xl bg-gradient-to-b from-orange-600 to-orange-700 hover:from-orange-500 hover:to-orange-700 text-white text-xs font-semibold whitespace-nowrap shadow-sm cursor-pointer"
+          onClick={() => scrollToSection('estimate', activeSection)}
+          className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-emerald-400 text-slate-950 font-bold text-xs shadow-md"
         >
-          <span>Free Estimate</span>
-          <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+          <span>Get Free Estimate</span>
+          <ArrowRight className="w-4 h-4" />
         </button>
       </div>
 
-      {/* PHONE DIALOG MODAL */}
+      {/* PHONE CONSULTATION MODAL */}
       {phoneModalOpen && (
         <div
           role="dialog"
           aria-modal="true"
-          aria-labelledby="phone-modal-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-xs"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200"
         >
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-md w-full p-6 sm:p-7 shadow-2xl space-y-5">
-            <div className="flex items-start justify-between gap-3 pb-3 border-b border-slate-200">
-              <div>
-                <p className="text-xs font-mono text-orange-700 font-semibold">
-                  DIRECT PHONE LINE
-                </p>
-                <h3 id="phone-modal-title" className="text-xl font-semibold text-slate-900 mt-0.5">
-                  Contact {BUSINESS_INFO.name}
-                </h3>
+          <div className="bg-slate-900 border border-slate-700 text-slate-200 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-full bg-white p-0.5 shadow-md overflow-hidden shrink-0 ring-1 ring-emerald-500/40">
+                  <img
+                    src={IMAGES.logo}
+                    alt="Dr. Foam Logo"
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-white leading-none">
+                    Call Dr. Foam
+                  </h3>
+                  <p className="text-[10px] text-emerald-400 font-mono mt-0.5">Barrie to North Bay</p>
+                </div>
               </div>
               <button
                 type="button"
                 onClick={() => setPhoneModalOpen(false)}
-                aria-label="Close dialog"
-                className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
+                className="p-1 rounded-lg text-slate-400 hover:text-white"
+                aria-label="Close modal"
               >
-                <X className="w-5 h-5" aria-hidden="true" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="space-y-3 text-sm text-slate-600 leading-relaxed">
-              <p>
-                Speak with our team regarding spray foam insulation, attic upgrades, commercial buildings, or new construction projects in Houston, TX.
+            <div className="text-center py-2 space-y-2">
+              <p className="text-xs text-slate-400 font-medium">
+                Barrie to North Bay, ON Consultation Line
               </p>
-
-              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-slate-500">Phone Number:</span>
-                  <span className="font-mono text-base font-semibold text-slate-900">
-                    {BUSINESS_INFO.phoneDisplay}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-500 leading-normal">
-                  {BUSINESS_INFO.phoneNote}
-                </p>
-              </div>
-
-              <div className="p-3 rounded-lg bg-orange-50/80 border border-orange-200/80 text-xs text-orange-950">
-                <span className="font-semibold block">Business Hours:</span>
+              <p className="text-2xl sm:text-3xl font-mono font-bold text-emerald-400">
+                {BUSINESS_INFO.phoneDisplay}
+              </p>
+              <p className="text-xs text-slate-400">
                 {BUSINESS_INFO.hoursDisplay}
-              </div>
+              </p>
             </div>
 
-            <div className="pt-2 flex flex-col gap-2.5">
+            <div className="space-y-2.5 pt-2">
               <a
                 href={BUSINESS_INFO.phoneTel}
-                className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-b from-orange-600 to-orange-700 hover:from-orange-500 hover:to-orange-700 text-white text-xs sm:text-sm font-semibold transition-all"
+                className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg transition-colors"
               >
-                <Phone className="w-4 h-4" aria-hidden="true" />
-                <span>Call {BUSINESS_INFO.phoneDisplay}</span>
-              </a>
-
-              <a
-                href={`mailto:${BUSINESS_INFO.email}?subject=${encodeURIComponent(
-                  'Insulation Consultation Inquiry - Houston Spray Foam Insulation'
-                )}`}
-                className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs sm:text-sm font-semibold transition-colors"
-              >
-                <Mail className="w-4 h-4 text-orange-700" aria-hidden="true" />
-                <span>Email Us ({BUSINESS_INFO.email})</span>
+                <Phone className="w-4 h-4" />
+                <span>Call Directly Now</span>
               </a>
 
               <button
                 type="button"
                 onClick={handleCopyPhone}
-                className="w-full inline-flex items-center justify-center gap-2 py-2 px-4 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold border border-slate-200 transition-colors cursor-pointer"
+                className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 transition-colors"
               >
                 {copiedPhone ? (
                   <>
-                    <Check className="w-4 h-4 text-emerald-600" aria-hidden="true" />
-                    <span>Phone Number Copied</span>
+                    <Check className="w-4 h-4 text-emerald-400" />
+                    <span>Phone Number Copied!</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-4 h-4 text-slate-500" aria-hidden="true" />
+                    <Copy className="w-4 h-4 text-slate-400" />
                     <span>Copy Phone Number</span>
                   </>
                 )}
               </button>
 
-              <div className="flex items-center justify-between pt-2">
-                <button
-                  type="button"
-                  onClick={() => setPhoneModalOpen(false)}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900 cursor-pointer"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
-                  <span>Back to Page</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPhoneModalOpen(false);
-                    scrollToSection('estimate');
-                  }}
-                  className="text-xs font-semibold text-orange-700 hover:text-orange-800 underline underline-offset-4 cursor-pointer"
-                >
-                  Request a Free Estimate Online
-                </button>
-              </div>
+              <a
+                href={`mailto:${BUSINESS_INFO.email}?subject=${encodeURIComponent(
+                  'Insulation Consultation Inquiry - Dr Foam Insulation Ltd.'
+                )}`}
+                className="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-300 hover:text-white font-medium text-xs border border-slate-800 transition-colors"
+              >
+                <Mail className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Email {BUSINESS_INFO.email}</span>
+              </a>
             </div>
           </div>
         </div>

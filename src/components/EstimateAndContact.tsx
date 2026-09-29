@@ -17,12 +17,15 @@ import {
   Hammer,
   Sparkles,
   Shield,
+  Instagram,
+  ExternalLink,
 } from 'lucide-react';
 import {
   BUSINESS_INFO,
   SERVICES_DATA,
   SITE_SECTIONS,
 } from '../data/siteContent';
+import { DrFoamBrandLogo } from './DrFoamBrandLogo';
 
 interface EstimateAndContactProps {
   prefilledService: string;
@@ -41,6 +44,7 @@ interface FormState {
   email: string;
   propertyType: string;
   serviceNeeded: string;
+  cityOrTown: string;
   message: string;
 }
 
@@ -63,8 +67,9 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
     fullName: '',
     phone: '',
     email: '',
-    propertyType: 'Residential',
+    propertyType: 'Residential Home',
     serviceNeeded: 'Spray Foam Insulation',
+    cityOrTown: 'Barrie',
     message: '',
   });
 
@@ -98,7 +103,7 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
 
     const digitsOnly = formData.phone.replace(/\D/g, '');
     if (digitsOnly.length < 10) {
-      nextErrors.phone = 'Please enter a valid 10-digit US phone number.';
+      nextErrors.phone = 'Please enter a valid 10-digit phone number.';
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -114,7 +119,7 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
     e.preventDefault();
     if (!validateForm()) return;
 
-    const refNum = `HSF-${Math.floor(100000 + Math.random() * 900000)}`;
+    const refNum = `DRF-${Math.floor(100000 + Math.random() * 900000)}`;
     const timestamp = new Date().toLocaleString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -138,6 +143,7 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
       `Name: ${submittedRecord.fullName}`,
       `Phone: ${submittedRecord.phone}`,
       `Email: ${submittedRecord.email}`,
+      `Location / Town: ${submittedRecord.cityOrTown}`,
       `Property Type: ${submittedRecord.propertyType}`,
       `Service Needed: ${submittedRecord.serviceNeeded}`,
       `Message / Details: ${submittedRecord.message || 'N/A'}`,
@@ -158,627 +164,547 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
       >
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Navigation bar */}
-          <div className="mb-8 flex flex-wrap items-center justify-between gap-3 pb-5 border-b border-slate-800">
-            <button
-              type="button"
-              onClick={onGoBackSection}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 text-xs sm:text-sm font-medium transition-colors cursor-pointer"
-            >
-              <ArrowLeft className="w-4 h-4 text-orange-400" aria-hidden="true" />
-              <span>Back to {previousSectionLabel}</span>
-            </button>
+          <div className="flex items-center justify-between pb-8 border-b border-slate-800 mb-10">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-xs font-mono font-bold text-emerald-300 uppercase tracking-wider">
+                Online Quote &amp; Consultation
+              </span>
+            </div>
 
-            <button
-              type="button"
-              onClick={() => onScrollToSection('top')}
-              className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-white transition-colors cursor-pointer"
-            >
-              <ArrowUp className="w-3.5 h-3.5 text-orange-400" aria-hidden="true" />
-              <span>Back to Top</span>
-            </button>
+            {previousSection && previousSection !== 'estimate' && (
+              <button
+                type="button"
+                onClick={onGoBackSection}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 transition-colors cursor-pointer"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Return to {previousSectionLabel}</span>
+              </button>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
-            {/* Left Column: Supporting Info & Phone Card */}
-            <div className="lg:col-span-5 space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+            {/* LEFT COLUMN: FORM CONTEXT & VALUE */}
+            <div className="lg:col-span-5 space-y-6">
               <div>
-                <p className="text-xs font-semibold text-orange-400 uppercase tracking-wider">
-                  Complimentary Consultation · Houston, Texas
+                <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider">
+                  Barrie · Muskoka · North Bay
                 </p>
                 <h2
                   id="estimate-heading"
-                  className="mt-2.5 text-2xl sm:text-4xl font-semibold text-white tracking-tight"
+                  className="mt-2 text-2xl sm:text-4xl font-bold text-white tracking-tight"
                 >
-                  Ready to Improve Your Property’s Insulation?
+                  Request a Free Estimate
                 </h2>
-                <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
-                  Tell us about your residential or commercial project. We will review your insulation and air-sealing requirements and provide a complimentary, no-obligation estimate.
+                <p className="mt-4 text-sm sm:text-base text-slate-300 leading-relaxed">
+                  Tell us about your property and insulation goals. We will review your project requirements and connect with a clear, tailored recommendation.
                 </p>
               </div>
 
-              {/* Direct Phone Card */}
-              <div className="p-6 sm:p-7 rounded-2xl bg-slate-800/90 border border-slate-700/90 space-y-5 shadow-xl backdrop-blur-xs">
-                <div>
-                  <p className="text-xs text-orange-400 font-semibold uppercase tracking-wide">
-                    Prefer to Speak Directly?
-                  </p>
-                  <h3 className="mt-1 text-xl font-semibold text-white">
-                    Talk With {BUSINESS_INFO.name}
-                  </h3>
-                  <p className="mt-2 text-sm text-slate-300 leading-relaxed">
-                    Call our team directly to discuss spray foam, attic retrofits, commercial buildings, or new construction insulation needs.
-                  </p>
-                </div>
-
-                <div className="pt-1">
-                  <a
-                    href={BUSINESS_INFO.phoneTel}
-                    className="w-full inline-flex items-center justify-center gap-2.5 px-5 py-4 text-sm font-semibold text-slate-900 bg-white hover:bg-slate-100 rounded-xl shadow-md transition-all whitespace-nowrap active:scale-95"
-                  >
-                    <Phone className="w-4 h-4 text-orange-700 shrink-0" aria-hidden="true" />
-                    <span className="font-mono font-bold">Call {BUSINESS_INFO.phoneDisplay}</span>
-                  </a>
-                </div>
-
-                <div className="pt-4 border-t border-slate-700/80 flex flex-col gap-2 text-xs text-slate-300">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-slate-400">Direct Email:</span>
-                    <a
-                      href={`mailto:${BUSINESS_INFO.email}`}
-                      className="font-mono text-white hover:text-orange-400 underline underline-offset-4 truncate"
-                    >
-                      {BUSINESS_INFO.email}
-                    </a>
-                  </div>
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="text-slate-400">Location:</span>
-                    <span>{BUSINESS_INFO.locationDisplay}</span>
-                  </div>
+              {/* Hook Card */}
+              <div className="p-5 rounded-2xl bg-emerald-950/40 border border-emerald-500/30">
+                <p className="text-xs font-bold text-emerald-300 uppercase tracking-wider">
+                  The Dr. Foam Guarantee of Clarity
+                </p>
+                <p className="mt-2 text-xs sm:text-sm text-slate-200 leading-relaxed">
+                  &ldquo;Keep your home warm in winter, cool in summer, and your bills steady.&rdquo;
+                </p>
+                <div className="mt-4 pt-3 border-t border-emerald-800/40 flex items-center justify-between text-xs text-emerald-300">
+                  <span>Fast Response</span>
+                  <span>•</span>
+                  <span>No High Pressure</span>
+                  <span>•</span>
+                  <span>Direct Consultation</span>
                 </div>
               </div>
 
-              {/* What to Expect */}
-              <div className="space-y-3 text-sm text-slate-300 border-t border-slate-800 pt-6">
-                <p className="font-semibold text-white">What happens next:</p>
-                <div className="space-y-2">
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed flex items-start gap-2">
-                    <span className="font-mono font-semibold text-orange-400">01.</span>
-                    <span>We review your property type and insulation scope.</span>
-                  </p>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed flex items-start gap-2">
-                    <span className="font-mono font-semibold text-orange-400">02.</span>
-                    <span>We follow up promptly by phone or email to schedule an on-site review.</span>
-                  </p>
-                  <p className="text-xs sm:text-sm text-slate-300 leading-relaxed flex items-start gap-2">
-                    <span className="font-mono font-semibold text-orange-400">03.</span>
-                    <span>You receive a clear, straightforward estimate with zero high-pressure tactics.</span>
+              {/* Direct Phone Assistance */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex items-start gap-4">
+                <div className="w-10 h-10 rounded-xl bg-emerald-700/80 flex items-center justify-center text-white shrink-0">
+                  <Phone className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-xs text-slate-400">Prefer to speak right now?</p>
+                  <a
+                    href={BUSINESS_INFO.phoneTel}
+                    className="text-base sm:text-lg font-bold text-white hover:text-emerald-400 transition-colors"
+                  >
+                    {BUSINESS_INFO.phoneDisplay}
+                  </a>
+                  <p className="text-[11px] text-slate-500 mt-0.5">
+                    {BUSINESS_INFO.phoneNote}
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Right Column: Free Estimate Form */}
-            <div className="lg:col-span-7 bg-white text-slate-900 rounded-2xl border border-slate-200 p-6 sm:p-8 lg:p-10 shadow-2xl">
-              {!submittedRecord ? (
-                <form onSubmit={handleSubmit} noValidate aria-label="Request a Free Estimate">
-                  <div className="pb-5 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                      <h3 className="text-xl sm:text-2xl font-semibold text-slate-900">
-                        Request a Free Estimate
-                      </h3>
-                      <p className="mt-1 text-xs sm:text-sm text-slate-600">
-                        Complete the short form below. Fields marked with * are required.
-                      </p>
-                    </div>
-                    <span className="text-xs text-orange-800 bg-orange-50 border border-orange-200/80 px-2.5 py-1 rounded-md font-mono self-start sm:self-auto font-semibold">
-                      100% Free
-                    </span>
+            {/* RIGHT COLUMN: LEAD / QUOTE FORM */}
+            <div className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+              {submittedRecord ? (
+                <div className="space-y-6 animate-in fade-in duration-300">
+                  <div className="w-14 h-14 rounded-2xl bg-emerald-600/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center">
+                    <CheckCircle2 className="w-8 h-8" />
                   </div>
 
-                  <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    {/* Full Name */}
+                  <div>
+                    <span className="text-xs font-mono text-emerald-400 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">
+                      REF #{submittedRecord.referenceId}
+                    </span>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mt-2">
+                      Estimate Request Received!
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+                      Thank you, <span className="font-semibold text-white">{submittedRecord.fullName}</span>. Your estimate request has been logged. Dr. Foam will review your details for your {submittedRecord.propertyType} project in {submittedRecord.cityOrTown}.
+                    </p>
+                  </div>
+
+                  {/* Summary Box */}
+                  <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs font-mono text-slate-300">
+                    <p><span className="text-slate-500">Service:</span> {submittedRecord.serviceNeeded}</p>
+                    <p><span className="text-slate-500">Property:</span> {submittedRecord.propertyType} ({submittedRecord.cityOrTown})</p>
+                    <p><span className="text-slate-500">Phone:</span> {submittedRecord.phone}</p>
+                    <p><span className="text-slate-500">Email:</span> {submittedRecord.email}</p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={handleCopyConfirmation}
+                      className="inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-colors"
+                    >
+                      {copiedSummary ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                      <span>{copiedSummary ? 'Summary Copied' : 'Copy Request Summary'}</span>
+                    </button>
+
+                    <a
+                      href={`mailto:${BUSINESS_INFO.email}?subject=${encodeURIComponent(
+                        `Estimate Request - ${submittedRecord.referenceId} (${submittedRecord.fullName})`
+                      )}&body=${encodeURIComponent(
+                        `Hello Dr. Foam team,\n\nI just submitted an estimate request:\nRef: ${submittedRecord.referenceId}\nName: ${submittedRecord.fullName}\nPhone: ${submittedRecord.phone}\nService: ${submittedRecord.serviceNeeded}\nLocation: ${submittedRecord.cityOrTown}\n\nDetails: ${submittedRecord.message}`
+                      )}`}
+                      className="inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300 transition-colors"
+                    >
+                      <Mail className="w-4 h-4" />
+                      <span>Send Direct Email Copy</span>
+                    </a>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSubmittedRecord(null);
+                      setFormData({
+                        fullName: '',
+                        phone: '',
+                        email: '',
+                        propertyType: 'Residential Home',
+                        serviceNeeded: 'Spray Foam Insulation',
+                        cityOrTown: 'Barrie',
+                        message: '',
+                      });
+                    }}
+                    className="text-xs text-slate-400 hover:text-white underline cursor-pointer pt-2"
+                  >
+                    Submit another inquiry
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* FULL NAME */}
                     <div>
-                      <label
-                        htmlFor="estimate-full-name"
-                        className="block text-xs font-semibold text-slate-800 mb-1.5"
-                      >
-                        Name *
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Full Name <span className="text-emerald-400">*</span>
                       </label>
                       <input
-                        id="estimate-full-name"
-                        name="fullName"
                         type="text"
-                        autoComplete="name"
                         required
                         value={formData.fullName}
                         onChange={(e) => {
                           setFormData({ ...formData, fullName: e.target.value });
                           if (errors.fullName) setErrors({ ...errors, fullName: undefined });
                         }}
-                        placeholder="e.g., John Smith"
-                        aria-invalid={Boolean(errors.fullName)}
-                        aria-describedby={errors.fullName ? 'error-full-name' : undefined}
-                        className={`w-full px-3.5 py-3 text-sm rounded-xl border bg-slate-50/70 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors ${
-                          errors.fullName ? 'border-red-600 ring-1 ring-red-500' : 'border-slate-300'
-                        }`}
+                        placeholder="John Smith"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                       />
                       {errors.fullName && (
-                        <p id="error-full-name" className="mt-1.5 text-xs text-red-600 flex items-center gap-1">
-                          <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                          <span>{errors.fullName}</span>
-                        </p>
+                        <p className="mt-1 text-[11px] text-red-400">{errors.fullName}</p>
                       )}
                     </div>
 
-                    {/* Phone Number */}
+                    {/* PHONE */}
                     <div>
-                      <label
-                        htmlFor="estimate-phone"
-                        className="block text-xs font-semibold text-slate-800 mb-1.5"
-                      >
-                        Phone *
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Phone Number <span className="text-emerald-400">*</span>
                       </label>
                       <input
-                        id="estimate-phone"
-                        name="phone"
                         type="tel"
-                        autoComplete="tel"
                         required
                         value={formData.phone}
                         onChange={(e) => {
                           setFormData({ ...formData, phone: e.target.value });
                           if (errors.phone) setErrors({ ...errors, phone: undefined });
                         }}
-                        placeholder="e.g., (713) 555-0199"
-                        aria-invalid={Boolean(errors.phone)}
-                        aria-describedby={errors.phone ? 'error-phone' : undefined}
-                        className={`w-full px-3.5 py-3 text-sm rounded-xl border bg-slate-50/70 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors ${
-                          errors.phone ? 'border-red-600 ring-1 ring-red-500' : 'border-slate-300'
-                        }`}
+                        placeholder="705-555-0123"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                       />
                       {errors.phone && (
-                        <p id="error-phone" className="mt-1.5 text-xs text-red-600 flex items-center gap-1">
-                          <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                          <span>{errors.phone}</span>
-                        </p>
+                        <p className="mt-1 text-[11px] text-red-400">{errors.phone}</p>
                       )}
                     </div>
+                  </div>
 
-                    {/* Email */}
-                    <div className="sm:col-span-2">
-                      <label
-                        htmlFor="estimate-email"
-                        className="block text-xs font-semibold text-slate-800 mb-1.5"
-                      >
-                        Email *
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* EMAIL */}
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Email Address <span className="text-emerald-400">*</span>
                       </label>
                       <input
-                        id="estimate-email"
-                        name="email"
                         type="email"
-                        autoComplete="email"
                         required
                         value={formData.email}
                         onChange={(e) => {
                           setFormData({ ...formData, email: e.target.value });
                           if (errors.email) setErrors({ ...errors, email: undefined });
                         }}
-                        placeholder="you@example.com"
-                        aria-invalid={Boolean(errors.email)}
-                        aria-describedby={errors.email ? 'error-email' : undefined}
-                        className={`w-full px-3.5 py-3 text-sm rounded-xl border bg-slate-50/70 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors ${
-                          errors.email ? 'border-red-600 ring-1 ring-red-500' : 'border-slate-300'
-                        }`}
+                        placeholder="name@example.com"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                       />
                       {errors.email && (
-                        <p id="error-email" className="mt-1.5 text-xs text-red-600 flex items-center gap-1">
-                          <AlertCircle className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                          <span>{errors.email}</span>
-                        </p>
+                        <p className="mt-1 text-[11px] text-red-400">{errors.email}</p>
                       )}
                     </div>
 
-                    {/* Property Type Dropdown */}
+                    {/* CITY / TOWN */}
                     <div>
-                      <label
-                        htmlFor="estimate-property-type"
-                        className="block text-xs font-semibold text-slate-800 mb-1.5"
-                      >
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
+                        Location / Town <span className="text-slate-500">(Ontario)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.cityOrTown}
+                        onChange={(e) =>
+                          setFormData({ ...formData, cityOrTown: e.target.value })
+                        }
+                        placeholder="e.g. Barrie, Muskoka, North Bay"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* PROPERTY TYPE */}
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
                         Property Type
                       </label>
                       <select
-                        id="estimate-property-type"
-                        name="propertyType"
                         value={formData.propertyType}
-                        onChange={(e) => setFormData({ ...formData, propertyType: e.target.value })}
-                        className="w-full px-3.5 py-3 text-sm rounded-xl border border-slate-300 bg-slate-50/70 text-slate-900 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors cursor-pointer"
+                        onChange={(e) =>
+                          setFormData({ ...formData, propertyType: e.target.value })
+                        }
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 cursor-pointer"
                       >
-                        <option value="Residential">Residential</option>
-                        <option value="Commercial">Commercial</option>
-                        <option value="New Construction">New Construction</option>
-                        <option value="Renovation">Renovation</option>
-                        <option value="Other">Other</option>
+                        <option value="Residential Home">Residential Home</option>
+                        <option value="Cottage / Waterfront">Cottage / Waterfront Retreat</option>
+                        <option value="Commercial / Industrial">Commercial / Industrial Building</option>
+                        <option value="Agricultural / Barn / Shop">Agricultural Barn / Workshop</option>
+                        <option value="New Custom Construction">New Custom Construction</option>
+                        <option value="Renovation / Addition">Renovation / Addition</option>
+                        <option value="Other">Other Structure</option>
                       </select>
                     </div>
 
-                    {/* Service Needed Dropdown */}
+                    {/* SERVICE NEEDED */}
                     <div>
-                      <label
-                        htmlFor="estimate-service-needed"
-                        className="block text-xs font-semibold text-slate-800 mb-1.5"
-                      >
+                      <label className="block text-xs font-semibold text-slate-300 mb-1">
                         Service Needed
                       </label>
                       <select
-                        id="estimate-service-needed"
-                        name="serviceNeeded"
                         value={formData.serviceNeeded}
-                        onChange={(e) => setFormData({ ...formData, serviceNeeded: e.target.value })}
-                        className="w-full px-3.5 py-3 text-sm rounded-xl border border-slate-300 bg-slate-50/70 text-slate-900 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors cursor-pointer"
+                        onChange={(e) =>
+                          setFormData({ ...formData, serviceNeeded: e.target.value })
+                        }
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 cursor-pointer"
                       >
                         <option value="Spray Foam Insulation">Spray Foam Insulation</option>
-                        <option value="Attic Insulation">Attic Insulation</option>
-                        <option value="Residential Insulation">Residential Insulation</option>
-                        <option value="Commercial Insulation">Commercial Insulation</option>
-                        <option value="Not Sure">Not Sure</option>
+                        <option value="Attic Insulation & Air Sealing">Attic Insulation &amp; Air Sealing</option>
+                        <option value="Residential & Cottage Insulation">Residential &amp; Cottage Insulation</option>
+                        <option value="Commercial & Agricultural Insulation">Commercial &amp; Agricultural Insulation</option>
+                        <option value="Basement & Crawlspace Encapsulation">Basement &amp; Crawlspace</option>
+                        <option value="New Construction Insulation">New Construction Insulation</option>
+                        <option value="Not Sure / Need Assessment">Not Sure / Need Assessment</option>
                       </select>
                     </div>
-
-                    {/* Message / Project Details */}
-                    <div className="sm:col-span-2">
-                      <label
-                        htmlFor="estimate-message"
-                        className="block text-xs font-semibold text-slate-800 mb-1.5"
-                      >
-                        Message (Optional)
-                      </label>
-                      <textarea
-                        id="estimate-message"
-                        name="message"
-                        rows={3}
-                        value={formData.message}
-                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                        placeholder="Tell us about your property, specific areas of concern, or estimated project timeline..."
-                        className="w-full px-3.5 py-3 text-sm rounded-xl border border-slate-300 bg-slate-50/70 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-2 focus:outline-orange-700 transition-colors"
-                      />
-                    </div>
                   </div>
 
-                  <div className="mt-7 pt-5 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <p className="text-xs text-slate-500">
-                      Your information is kept strictly private.
-                    </p>
-                    <button
-                      type="submit"
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 text-sm font-semibold text-white bg-gradient-to-b from-orange-600 to-orange-700 hover:from-orange-500 hover:to-orange-700 rounded-xl shadow-md cta-glow transition-all cursor-pointer whitespace-nowrap active:scale-95"
-                    >
-                      <span>Request a Free Estimate</span>
-                      <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                    </button>
+                  {/* MESSAGE */}
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-300 mb-1">
+                      Project Notes / Scope Details <span className="text-slate-500">(Optional)</span>
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={formData.message}
+                      onChange={(e) =>
+                        setFormData({ ...formData, message: e.target.value })
+                      }
+                      placeholder="Briefly describe what areas you want insulated (e.g. attic, crawlspace, whole cottage, shop)..."
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-xs sm:text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 resize-none"
+                    />
                   </div>
+
+                  {/* SUBMIT BUTTON */}
+                  <button
+                    type="submit"
+                    className="w-full py-4 px-6 rounded-xl font-bold text-xs uppercase tracking-wider text-slate-950 bg-gradient-to-r from-emerald-400 via-emerald-300 to-emerald-400 hover:from-emerald-300 hover:to-emerald-400 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    <span>Request a Free Estimate</span>
+                    <ArrowRight className="w-4 h-4 text-slate-950" />
+                  </button>
+
+                  <p className="text-[11px] text-slate-400 text-center">
+                    Direct inquiries go to <span className="text-slate-300 font-mono">{BUSINESS_INFO.email}</span>. No spam.
+                  </p>
                 </form>
-              ) : (
-                <div className="py-4 space-y-6" role="status" aria-live="polite">
-                  <div className="flex items-start gap-3.5 pb-5 border-b border-slate-200">
-                    <CheckCircle2 className="w-7 h-7 text-emerald-600 shrink-0 mt-0.5" aria-hidden="true" />
-                    <div>
-                      <p className="text-xs font-mono text-slate-500">
-                        ESTIMATE INQUIRY LOGGED · REF {submittedRecord.referenceId}
-                      </p>
-                      <h3 className="mt-1 text-2xl font-semibold text-slate-900">
-                        Thank You, {submittedRecord.fullName}
-                      </h3>
-                      <p className="mt-1.5 text-sm text-slate-600 leading-relaxed">
-                        Your inquiry for <strong className="text-slate-900">{submittedRecord.serviceNeeded}</strong> has been generated.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-2.5 text-xs sm:text-sm">
-                    <div className="flex justify-between py-1 border-b border-slate-200/70">
-                      <span className="text-slate-500">Property Type:</span>
-                      <span className="font-medium text-slate-900">{submittedRecord.propertyType}</span>
-                    </div>
-                    <div className="flex justify-between py-1 border-b border-slate-200/70">
-                      <span className="text-slate-500">Requested Service:</span>
-                      <span className="font-medium text-slate-900">{submittedRecord.serviceNeeded}</span>
-                    </div>
-                    <div className="flex justify-between py-1 border-b border-slate-200/70">
-                      <span className="text-slate-500">Contact:</span>
-                      <span className="font-mono text-slate-900">
-                        {submittedRecord.phone} · {submittedRecord.email}
-                      </span>
-                    </div>
-                    {submittedRecord.message && (
-                      <div className="pt-1">
-                        <span className="text-slate-500 block">Notes:</span>
-                        <p className="mt-1 text-slate-800">{submittedRecord.message}</p>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-3 pt-2">
-                    <a
-                      href={`mailto:${BUSINESS_INFO.email}?subject=${encodeURIComponent(
-                        `Estimate Request (${submittedRecord.referenceId}) - ${submittedRecord.serviceNeeded}`
-                      )}&body=${encodeURIComponent(
-                        `Hello Houston Spray Foam Insulation,\n\nI would like to request an estimate:\n\nName: ${submittedRecord.fullName}\nPhone: ${submittedRecord.phone}\nEmail: ${submittedRecord.email}\nProperty Type: ${submittedRecord.propertyType}\nService Needed: ${submittedRecord.serviceNeeded}\nMessage: ${submittedRecord.message || 'N/A'}\n`
-                      )}`}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-white bg-orange-700 hover:bg-orange-800 rounded-xl transition-colors whitespace-nowrap cta-glow active:scale-95"
-                    >
-                      <Mail className="w-4 h-4" aria-hidden="true" />
-                      <span>Send Email ({BUSINESS_INFO.email})</span>
-                    </a>
-
-                    <button
-                      type="button"
-                      onClick={handleCopyConfirmation}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors whitespace-nowrap cursor-pointer active:scale-95"
-                    >
-                      {copiedSummary ? (
-                        <>
-                          <Check className="w-4 h-4 text-emerald-600" aria-hidden="true" />
-                          <span>Summary Copied</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="w-4 h-4" aria-hidden="true" />
-                          <span>Copy Summary</span>
-                        </>
-                      )}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setSubmittedRecord(null)}
-                      className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl cursor-pointer"
-                    >
-                      <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
-                      <span>Back to Form</span>
-                    </button>
-                  </div>
-                </div>
               )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* SECTION 10: CONTACT SECTION */}
+      {/* SECTION 10: VERIFIED CONTACT SECTION */}
       <section
         id="contact"
         aria-labelledby="contact-heading"
         className="py-16 sm:py-20 lg:py-24 bg-white border-b border-slate-200"
       >
         <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 pb-10 border-b border-slate-200">
-            <div>
-              <p className="text-xs font-semibold text-orange-700 uppercase tracking-wider">
-                Direct Contact · Houston, Texas
-              </p>
-              <h2
-                id="contact-heading"
-                className="mt-2.5 text-2xl sm:text-4xl font-semibold text-slate-900 tracking-tight"
-              >
-                Contact {BUSINESS_INFO.name}
-              </h2>
-            </div>
-            <button
-              type="button"
-              onClick={() => setLegalModalType('standards')}
-              className="text-xs font-medium text-slate-600 hover:text-orange-700 underline underline-offset-4 self-start lg:self-auto cursor-pointer"
+          <div className="max-w-3xl">
+            <p className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">
+              Get in Touch
+            </p>
+            <h2
+              id="contact-heading"
+              className="mt-2 text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight"
             >
-              Our Service Standards &amp; Approach
-            </button>
+              Contact Dr Foam Insulation Ltd.
+            </h2>
+            <p className="mt-3 text-sm sm:text-base text-slate-600">
+              Reach out directly to discuss insulation solutions for your home, cottage, or business in Ontario.
+            </p>
           </div>
 
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Phone Card */}
-            <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col justify-between card-hover hover:border-slate-300 hover:shadow-md transition-all">
+            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between hover:border-emerald-300 transition-colors">
               <div>
-                <div className="flex items-center justify-between text-xs text-slate-500">
-                  <span className="font-medium">Direct Phone</span>
-                  <Phone className="w-4 h-4 text-orange-700" aria-hidden="true" />
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                  <Phone className="w-5 h-5" />
                 </div>
-                <p className="mt-3 font-mono text-base font-bold text-slate-900">
-                  {BUSINESS_INFO.phoneDisplay}
-                </p>
-                <p className="mt-2 text-xs text-slate-600 leading-relaxed">
-                  {BUSINESS_INFO.phoneNote}
-                </p>
+                <h3 className="text-base font-bold text-slate-900 mt-4">Phone Consultation</h3>
+                <p className="text-xs text-slate-500 mt-1">Direct inquiries &amp; estimate booking</p>
               </div>
-              <div className="mt-5 pt-4 border-t border-slate-200/80">
+              <div className="mt-6 pt-4 border-t border-slate-200">
                 <a
                   href={BUSINESS_INFO.phoneTel}
-                  className="text-xs font-semibold text-orange-700 hover:text-orange-800 inline-flex items-center gap-1.5"
+                  className="text-base font-bold text-emerald-700 hover:text-emerald-800 hover:underline block"
                 >
-                  <span>Call {BUSINESS_INFO.phoneDisplay}</span>
-                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                  {BUSINESS_INFO.phoneDisplay}
                 </a>
               </div>
             </div>
 
             {/* Email Card */}
-            <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col justify-between card-hover hover:border-slate-300 hover:shadow-md transition-all">
+            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between hover:border-emerald-300 transition-colors">
               <div>
-                <div className="flex items-center justify-between text-xs text-slate-500">
-                  <span className="font-medium">Email</span>
-                  <Mail className="w-4 h-4 text-orange-700" aria-hidden="true" />
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                  <Mail className="w-5 h-5" />
                 </div>
-                <p className="mt-3 font-mono text-xs sm:text-sm font-semibold text-slate-900 break-all">
-                  {BUSINESS_INFO.email}
-                </p>
-                <p className="mt-2 text-xs text-slate-600 leading-relaxed">
-                  Send your project details, questions, or estimate inquiries anytime.
-                </p>
+                <h3 className="text-base font-bold text-slate-900 mt-4">Email</h3>
+                <p className="text-xs text-slate-500 mt-1">Send blueprint drawings or notes</p>
               </div>
-              <div className="mt-5 pt-4 border-t border-slate-200/80">
+              <div className="mt-6 pt-4 border-t border-slate-200">
                 <a
                   href={`mailto:${BUSINESS_INFO.email}`}
-                  className="text-xs font-semibold text-orange-700 hover:text-orange-800 inline-flex items-center gap-1.5"
+                  className="text-xs sm:text-sm font-bold text-emerald-700 hover:text-emerald-800 hover:underline break-all block"
                 >
-                  <span>Send Email</span>
-                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+                  {BUSINESS_INFO.email}
                 </a>
               </div>
             </div>
 
-            {/* Business Hours Card */}
-            <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col justify-between card-hover hover:border-slate-300 hover:shadow-md transition-all">
+            {/* Service Territory Card */}
+            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between hover:border-emerald-300 transition-colors">
               <div>
-                <div className="flex items-center justify-between text-xs text-slate-500">
-                  <span className="font-medium">Business Hours</span>
-                  <Clock className="w-4 h-4 text-orange-700" aria-hidden="true" />
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                  <MapPin className="w-5 h-5" />
                 </div>
-                <p className="mt-3 text-sm font-semibold text-slate-900">
-                  Monday – Friday
-                </p>
-                <p className="mt-1 font-mono text-xs text-orange-800 font-semibold">
-                  7:00 AM – 6:00 PM
-                </p>
-                <p className="mt-2 text-xs text-slate-600 leading-relaxed">
-                  Available for weekday phone consultations. Online inquiries accepted 24/7.
-                </p>
+                <h3 className="text-base font-bold text-slate-900 mt-4">Service Corridor</h3>
+                <p className="text-xs text-slate-500 mt-1">Ontario regional coverage</p>
               </div>
-              <div className="mt-5 pt-4 border-t border-slate-200/80 text-xs text-slate-500">
-                Saturday: By Appointment
+              <div className="mt-6 pt-4 border-t border-slate-200">
+                <p className="text-sm font-bold text-slate-900">
+                  {BUSINESS_INFO.locationDisplay}
+                </p>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Muskoka · Parry Sound · Central ON
+                </p>
               </div>
             </div>
 
-            {/* Location Card */}
-            <div className="p-6 rounded-2xl border border-slate-200 bg-slate-50/70 flex flex-col justify-between card-hover hover:border-slate-300 hover:shadow-md transition-all">
+            {/* Hours & Instagram */}
+            <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between hover:border-emerald-300 transition-colors">
               <div>
-                <div className="flex items-center justify-between text-xs text-slate-500">
-                  <span className="font-medium">Location</span>
-                  <MapPin className="w-4 h-4 text-orange-700" aria-hidden="true" />
+                <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center">
+                  <Clock className="w-5 h-5" />
                 </div>
-                <p className="mt-3 text-sm font-semibold text-slate-900">
-                  {BUSINESS_INFO.locationDisplay}
-                </p>
-                <p className="mt-2 text-xs text-slate-600 leading-relaxed">
-                  Serving residential and commercial properties throughout Houston, TX.
-                </p>
+                <h3 className="text-base font-bold text-slate-900 mt-4">Operating Hours</h3>
+                <p className="text-xs text-slate-500 mt-1">Monday – Saturday</p>
               </div>
-              <div className="mt-5 pt-4 border-t border-slate-200/80 text-xs font-mono text-slate-500">
-                Houston, Texas &amp; Greater Metro
+              <div className="mt-6 pt-4 border-t border-slate-200">
+                <p className="text-xs font-semibold text-slate-800">
+                  7:00 AM – 6:00 PM
+                </p>
+                <a
+                  href={BUSINESS_INFO.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[11px] text-emerald-700 hover:underline font-bold mt-1 inline-flex items-center gap-1"
+                >
+                  <Instagram className="w-3 h-3" />
+                  <span>{BUSINESS_INFO.instagramHandle}</span>
+                </a>
               </div>
+            </div>
+          </div>
+
+          {/* Service Area Badges */}
+          <div className="mt-10 p-6 rounded-2xl bg-slate-100/80 border border-slate-200">
+            <p className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">
+              Serving Communities Across Ontario:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {BUSINESS_INFO.serviceCoverageAreas.map((area, idx) => (
+                <span
+                  key={idx}
+                  className="text-xs bg-white text-slate-800 font-medium px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs"
+                >
+                  {area}
+                </span>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
       {/* SECTION 13: FOOTER */}
-      <footer className="bg-slate-950 text-slate-400 pt-16 pb-28 lg:pb-16 border-t border-slate-900">
-        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-slate-800/80">
-            {/* Brand & Summary */}
-            <div className="lg:col-span-5 space-y-4">
-              <p className="font-editorial text-xl font-semibold text-white tracking-tight">
-                {BUSINESS_INFO.name}
+      <footer className="bg-slate-950 text-slate-400 text-xs border-t border-slate-800">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+            {/* Brand Column */}
+            <div className="lg:col-span-2 space-y-4">
+              <DrFoamBrandLogo size="md" lightText={true} />
+
+              <p className="text-xs text-slate-300 leading-relaxed max-w-sm">
+                &ldquo;Keep your home warm in winter, cool in summer, and your bills steady.&rdquo; Residential and commercial spray foam insulation solutions from Barrie to North Bay, ON.
               </p>
-              <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
-                Professional spray foam and thermal insulation solutions for residential and commercial properties in Houston, TX. Helping property owners improve indoor comfort and air sealing.
-              </p>
-              <div className="pt-2 flex flex-wrap items-center gap-3">
-                <a
-                  href="#estimate"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onScrollToSection('estimate');
-                  }}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold text-white bg-gradient-to-b from-orange-600 to-orange-700 hover:from-orange-500 hover:to-orange-700 rounded-xl transition-all whitespace-nowrap cta-glow active:scale-95"
-                >
-                  <span>Request a Free Estimate</span>
-                  <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
-                </a>
-                <button
-                  type="button"
-                  onClick={() => onScrollToSection('top')}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2.5 text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-xl transition-colors cursor-pointer active:scale-95"
-                >
-                  <ArrowUp className="w-3.5 h-3.5 text-orange-400" aria-hidden="true" />
-                  <span>Back to Top</span>
-                </button>
+
+              <div className="space-y-1.5 text-xs text-slate-300">
+                <p className="flex items-center gap-2">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Barrie to North Bay, Ontario, Canada</span>
+                </p>
+                <p className="flex items-center gap-2">
+                  <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                  <a href={BUSINESS_INFO.phoneTel} className="hover:text-white font-semibold">
+                    {BUSINESS_INFO.phoneDisplay}
+                  </a>
+                </p>
+                <p className="flex items-center gap-2">
+                  <Mail className="w-3.5 h-3.5 text-emerald-400" />
+                  <a href={`mailto:${BUSINESS_INFO.email}`} className="hover:text-white">
+                    {BUSINESS_INFO.email}
+                  </a>
+                </p>
+                <p className="flex items-center gap-2">
+                  <Instagram className="w-3.5 h-3.5 text-emerald-400" />
+                  <a
+                    href={BUSINESS_INFO.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-white text-emerald-400"
+                  >
+                    {BUSINESS_INFO.instagramHandle}
+                  </a>
+                </p>
               </div>
             </div>
 
-            {/* Services Links */}
-            <div className="lg:col-span-3 space-y-3">
-              <p className="text-xs font-semibold text-white uppercase tracking-wider">
-                Services
-              </p>
-              <ul className="space-y-2 text-xs sm:text-sm">
-                {SERVICES_DATA.map((service) => (
-                  <li key={service.id}>
-                    <button
-                      type="button"
-                      onClick={() => onSelectServiceForEstimate(service.shortTitle, undefined, 'contact')}
-                      className="text-left text-slate-400 hover:text-white transition-colors cursor-pointer"
-                    >
-                      {service.shortTitle}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Navigation Links */}
-            <div className="lg:col-span-2 space-y-3">
-              <p className="text-xs font-semibold text-white uppercase tracking-wider">
+            {/* Quick Links */}
+            <div className="space-y-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-white">
                 Navigation
               </p>
-              <ul className="space-y-2 text-xs sm:text-sm">
-                {[
-                  { id: 'top', label: 'Home' },
-                  { id: 'services', label: 'Services' },
-                  { id: 'why-spray-foam', label: 'Why Spray Foam' },
-                  { id: 'houston-solutions', label: 'Houston Solutions' },
-                  { id: 'process', label: 'Our Process' },
-                  { id: 'faq', label: 'FAQ' },
-                  { id: 'contact', label: 'Contact' },
-                ].map((item) => (
-                  <li key={item.id}>
+              <ul className="space-y-2">
+                {SITE_SECTIONS.map((sec) => (
+                  <li key={sec.id}>
                     <button
                       type="button"
-                      onClick={() => onScrollToSection(item.id)}
-                      className="text-left text-slate-400 hover:text-white transition-colors cursor-pointer"
+                      onClick={() => onScrollToSection(sec.id)}
+                      className="hover:text-emerald-400 transition-colors cursor-pointer text-left"
                     >
-                      {item.label}
+                      {sec.label}
                     </button>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Contact Details */}
-            <div className="lg:col-span-2 space-y-3 text-xs sm:text-sm">
-              <p className="text-xs font-semibold text-white uppercase tracking-wider">
-                Contact
+            {/* Services */}
+            <div className="space-y-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-white">
+                Services
               </p>
-              <p>
-                <a href={BUSINESS_INFO.phoneTel} className="text-slate-300 hover:text-white font-mono font-semibold">
-                  {BUSINESS_INFO.phoneDisplay}
-                </a>
+              <ul className="space-y-2">
+                {SERVICES_DATA.map((svc) => (
+                  <li key={svc.id}>
+                    <button
+                      type="button"
+                      onClick={() => onSelectServiceForEstimate(svc.name, `Footer inquiry for ${svc.name}`)}
+                      className="hover:text-emerald-400 transition-colors cursor-pointer text-left"
+                    >
+                      {svc.name}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Regional Coverage */}
+            <div className="space-y-3">
+              <p className="text-xs font-bold uppercase tracking-wider text-white">
+                Ontario Coverage
               </p>
-              <p>
-                <a
-                  href={`mailto:${BUSINESS_INFO.email}`}
-                  className="text-slate-300 hover:text-white underline underline-offset-4 font-mono break-all"
-                >
-                  {BUSINESS_INFO.email}
-                </a>
-              </p>
-              <p className="text-slate-400">{BUSINESS_INFO.locationDisplay}</p>
-              <p className="text-slate-400">{BUSINESS_INFO.hoursDisplay}</p>
+              <ul className="space-y-1.5 text-[11px] text-slate-400">
+                <li>• Barrie &amp; Innisfil</li>
+                <li>• Orillia &amp; Severn</li>
+                <li>• Muskoka &amp; Bracebridge</li>
+                <li>• Huntsville &amp; Lake of Bays</li>
+                <li>• Parry Sound &amp; Georgian Bay</li>
+                <li>• North Bay &amp; Callander</li>
+              </ul>
             </div>
           </div>
 
-          {/* Bottom Legal Bar */}
-          <div className="pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-slate-500">
+          <div className="mt-12 pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
             <p>
-              &copy; {new Date().getFullYear()} {BUSINESS_INFO.name}. All rights reserved. Houston, TX.
+              &copy; {new Date().getFullYear()} Dr Foam Insulation Ltd. All rights reserved. Website: {BUSINESS_INFO.domain}
             </p>
-            <div className="flex flex-wrap items-center gap-5">
+
+            <div className="flex items-center gap-4">
               <button
                 type="button"
                 onClick={() => setLegalModalType('privacy')}
@@ -786,6 +712,7 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
               >
                 Privacy Policy
               </button>
+              <span>•</span>
               <button
                 type="button"
                 onClick={() => setLegalModalType('terms')}
@@ -793,6 +720,7 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
               >
                 Terms of Service
               </button>
+              <span>•</span>
               <button
                 type="button"
                 onClick={() => setLegalModalType('standards')}
@@ -810,35 +738,32 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
         <div
           role="dialog"
           aria-modal="true"
-          aria-labelledby="legal-modal-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-xs"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200"
         >
-          <div className="bg-white border border-slate-200 rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl max-h-[85vh] overflow-y-auto animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-200">
-              <h3 id="legal-modal-title" className="text-xl font-semibold text-slate-900">
+          <div className="bg-slate-900 border border-slate-700 text-slate-200 rounded-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto p-6 shadow-2xl">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <h3 className="text-base font-bold text-white">
                 {legalModalType === 'privacy' && 'Privacy Policy'}
                 {legalModalType === 'terms' && 'Terms of Service'}
-                {legalModalType === 'standards' && 'Our Service Standards & Commitment'}
+                {legalModalType === 'standards' && 'Dr. Foam Service Standards'}
               </h3>
               <button
                 type="button"
                 onClick={() => setLegalModalType(null)}
-                aria-label="Close dialog"
-                className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
+                className="p-1 rounded-lg text-slate-400 hover:text-white"
               >
-                <X className="w-5 h-5" aria-hidden="true" />
+                <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="mt-5 space-y-4 text-sm text-slate-600 leading-relaxed">
+            <div className="mt-4 space-y-3 text-xs leading-relaxed text-slate-300">
               {legalModalType === 'privacy' && (
                 <>
                   <p>
-                    <strong className="text-slate-900">{BUSINESS_INFO.name}</strong> respects your privacy. Information submitted through our estimate request form—including your name, phone number, email address, property type, and project notes—is collected solely for the purpose of responding to your inquiry and discussing insulation solutions for your property.
+                    Dr Foam Insulation Ltd. respects your privacy. Any personal information provided through our estimate forms, email inquiries, or phone consultations is used solely for project assessment, quotation, and direct service communication.
                   </p>
                   <p>
-                    We do not sell or rent your personal contact information to third-party lead brokers. If you have questions regarding your inquiry details, contact us at{' '}
-                    <span className="font-mono text-slate-900">{BUSINESS_INFO.email}</span>.
+                    We do not sell, rent, or distribute your personal contact information to external third parties or marketing lists.
                   </p>
                 </>
               )}
@@ -846,55 +771,36 @@ export const EstimateAndContact: React.FC<EstimateAndContactProps> = ({
               {legalModalType === 'terms' && (
                 <>
                   <p>
-                    All building-science descriptions, educational summaries, and climate considerations on this website are provided for general informational purposes. Actual thermal performance and installation scope depend on an on-site evaluation of your specific residential or commercial structure in Houston, TX.
+                    All estimate requests submitted through this website constitute preliminary consultations and do not form a binding contract until formal project specifications, surface inspections, and work orders are agreed upon in writing.
                   </p>
                   <p>
-                    Project estimates, material recommendations, timelines, and terms are confirmed prior to scheduling insulation work with <strong className="text-slate-900">{BUSINESS_INFO.name}</strong>.
+                    Insulation performance is subject to existing building construction, structural air barriers, and overall building envelope integrity.
                   </p>
                 </>
               )}
 
               {legalModalType === 'standards' && (
                 <>
-                  <p className="text-slate-800 font-medium">
-                    At <strong className="text-slate-900">{BUSINESS_INFO.name}</strong>, we are committed to professional service standards:
+                  <p>
+                    Dr Foam Insulation Ltd. is committed to providing high-quality residential and commercial spray foam insulation across the Barrie-to-North Bay Ontario corridor.
                   </p>
-                  <ul className="space-y-2.5 text-xs sm:text-sm text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                    <li className="flex items-start gap-2.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-2 shrink-0" />
-                      <span><strong>On-Site Property Review:</strong> We discuss your building layout, attic accessibility, or commercial structure before recommending an application.</span>
-                    </li>
-                    <li className="flex items-start gap-2.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-2 shrink-0" />
-                      <span><strong>Air-Sealing &amp; Thermal Focus:</strong> We prioritize continuous air barriers to restrict uncontrolled outdoor air and humidity infiltration.</span>
-                    </li>
-                    <li className="flex items-start gap-2.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-orange-600 mt-2 shrink-0" />
-                      <span><strong>Transparent Written Estimates:</strong> Clear scope of work, straightforward communication, and no high-pressure sales tactics.</span>
-                    </li>
+                  <ul className="space-y-1.5 list-disc pl-4 text-slate-300">
+                    <li>Accurate, transparent insulation recommendations.</li>
+                    <li>Quality-certified foam formulations for Canadian climate demands.</li>
+                    <li>Clean, professional on-site installation and property care.</li>
+                    <li>No high-pressure sales tactics.</li>
                   </ul>
                 </>
               )}
             </div>
 
-            <div className="mt-6 pt-4 border-t border-slate-200 flex items-center justify-between">
+            <div className="mt-6 pt-4 border-t border-slate-800 flex justify-end">
               <button
                 type="button"
                 onClick={() => setLegalModalType(null)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-xl cursor-pointer"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-slate-950 bg-emerald-400 hover:bg-emerald-300"
               >
-                <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
-                <span>Back to Page</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setLegalModalType(null);
-                  onScrollToSection('estimate');
-                }}
-                className="px-4 py-2 text-xs font-semibold text-white bg-orange-700 hover:bg-orange-800 rounded-xl cursor-pointer shadow-xs active:scale-95"
-              >
-                Request a Free Estimate
+                Close
               </button>
             </div>
           </div>

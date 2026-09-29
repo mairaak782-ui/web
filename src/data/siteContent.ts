@@ -3,6 +3,7 @@ import atticServiceImg from '../assets/images/service_attic_insulation_179069038
 import wallServiceImg from '../assets/images/service_wall_cavity_insulation_1790690404098.jpg';
 import sprayFoamServiceImg from '../assets/images/service_spray_foam_insulation_1790690420132.jpg';
 import floorServiceImg from '../assets/images/service_floor_foundation_insulation_1790690435707.jpg';
+import logoImg from '../assets/images/dr_foam_logo_1790709057711.jpg';
 
 export interface ServiceItem {
   id: string;
@@ -28,12 +29,13 @@ export interface BenefitPillar {
   scienceNote: string;
 }
 
-export interface HoustonPropertyPillar {
+export interface OntarioPropertyPillar {
   id: string;
   title: string;
   challenge: string;
   solution: string;
   highlight: string;
+  badge: string;
 }
 
 export interface ProcessStep {
@@ -58,6 +60,7 @@ export interface FaqItem {
 }
 
 export const IMAGES = {
+  logo: logoImg,
   heroHome: heroHomeImg,
   atticService: atticServiceImg,
   wallService: wallServiceImg,
@@ -69,9 +72,9 @@ export const SITE_SECTIONS = [
   { id: 'top', label: 'Home' },
   { id: 'services', label: 'Services' },
   { id: 'why-spray-foam', label: 'Why Spray Foam' },
-  { id: 'houston-solutions', label: 'Houston Properties' },
-  { id: 'process', label: 'Our 4-Step Process' },
-  { id: 'trust', label: 'Why Choose Us' },
+  { id: 'ontario-solutions', label: 'Ontario Properties' },
+  { id: 'process', label: '4-Step Prescription' },
+  { id: 'trust', label: 'Why Dr. Foam' },
   { id: 'faq', label: 'FAQ' },
   { id: 'estimate', label: 'Free Estimate' },
   { id: 'contact', label: 'Contact' },
@@ -89,371 +92,378 @@ export function preloadSiteImages(): void {
 }
 
 export const BUSINESS_INFO = {
-  name: 'Houston Spray Foam Insulation',
-  phoneDisplay: '713-497-1773',
-  phoneTel: 'tel:7134971773',
-  phoneNote: 'Direct phone line for free estimates and inquiries across Houston, TX.',
-  email: 'houstonsprayfoaminsulationtx@gmail.com',
-  cityState: 'Houston, Texas',
-  locationDisplay: 'Houston, TX',
-  regionSummary: 'Serving Houston, TX and Surrounding Greater Houston Areas',
-  hoursDisplay: 'Monday – Friday: 7:00 AM – 6:00 PM · Saturday: By Appointment',
-  propertyTypes: ['Residential', 'Commercial', 'New Construction', 'Renovation', 'Other'],
-  servicesList: [
-    'Spray Foam Insulation',
-    'Attic Insulation',
-    'Residential Insulation',
-    'Commercial Insulation',
-    'New Construction & Renovation',
-    'Energy-Efficiency Improvements',
-    'Not Sure',
+  name: 'Dr Foam Insulation Ltd.',
+  brandTagline: 'Keep your home warm in winter, cool in summer, and your bills steady.',
+  heroHook: "Your energy bill shouldn't act like it's at Canada's Wonderland. Unless you enjoy paying for excitement!",
+  shortName: 'Dr. Foam',
+  domain: 'drfoam.ca',
+  phoneDisplay: '705-733-1163',
+  phoneTel: 'tel:7057331163',
+  phoneFormatted: '(705) 733-1163',
+  phoneNote: 'Direct line for residential & commercial estimates from Barrie to North Bay, ON.',
+  email: 'sales.drfoam@gmail.com',
+  instagram: 'https://instagram.com/dr_foam_insulation_ltd/',
+  instagramHandle: '@dr_foam_insulation_ltd',
+  cityState: 'Barrie to North Bay, ON',
+  locationDisplay: 'Barrie to North Bay, ON',
+  province: 'Ontario, Canada',
+  regionSummary: 'Serving Barrie, Orillia, Muskoka, Huntsville, Parry Sound, North Bay & Central Ontario',
+  hoursDisplay: 'Monday – Saturday: 7:00 AM – 6:00 PM · Emergency & Weekend Consultations Available',
+  serviceCoverageAreas: [
+    'Barrie & Innisfil',
+    'Orillia & Lake Country',
+    'Gravenhurst & Bracebridge',
+    'Huntsville & Lake of Bays',
+    'Muskoka & Cottage Country',
+    'Parry Sound & Georgian Bay',
+    'Almaguin Highlands & Sundridge',
+    'North Bay & Callander',
+    'Midland & Penetanguishene',
+    'Severn & Coldwater',
   ],
 } as const;
 
-export const TRUST_STRIP_ITEMS = [
-  {
-    label: 'Houston-Focused Service',
-    detail: 'Tailored insulation solutions designed specifically for Southeast Texas climate conditions',
-  },
-  {
-    label: 'Residential & Commercial Scope',
-    detail: 'Experienced with single-family homes, multi-story residences, offices, and commercial buildings',
-  },
-  {
-    label: 'Complimentary Estimates',
-    detail: 'No-obligation consultations to assess your attic, walls, or commercial structure',
-  },
-  {
-    label: 'Quality-Focused Approach',
-    detail: 'Clear communication, meticulous site preparation, and professional insulation practices',
-  },
-] as const;
-
 export const SERVICES_DATA: ServiceItem[] = [
   {
-    id: 'spray-foam-insulation',
+    id: 'spray-foam',
     index: '01',
     name: 'Spray Foam Insulation',
     shortTitle: 'Spray Foam Insulation',
-    category: 'High-Performance Thermal & Air Barrier',
+    category: 'Thermal & Air Barrier',
     summary:
-      'Creates a continuous insulation and air-sealing layer that expands to seal gaps, cracks, and irregular framing cavities where traditional materials often fall short.',
-    idealFor: 'Unvented attic rooflines, exterior wall assemblies, rim joists, and properties needing thorough air sealing.',
+      'High-performance 2lb closed-cell and open-cell spray foam insulation applied by Dr. Foam technicians to deliver an unbroken air, thermal, and vapor seal for Ontario structures.',
+    idealFor:
+      'Homes, cottages, exterior wall cavities, cathedral ceilings, rim joists, and pole barns.',
     keyBenefits: [
-      'Helps create an effective air-sealing and thermal barrier in a single application',
-      'Fills penetrations and hard-to-reach voids to reduce outdoor air infiltration',
-      'Provides high thermal resistance per inch of installed thickness',
-      'Helps limit uncontrolled humid air movement into conditioned living spaces',
+      'Expands instantly to seal air gaps, micro-drafts, and wall penetrations',
+      'Provides high R-value per inch suited for harsh Ontario freeze-thaw cycles',
+      'Acts as a continuous barrier against moisture, humidity, and winter condensation',
+      'Helps maintain steady year-round indoor temperatures across all seasons',
     ],
-    applicationAreas: ['Roof decks & unvented attics', 'Exterior stud wall cavities', 'Band & rim joists', 'Crawl space perimeters'],
+    applicationAreas: ['Wall Cavities', 'Cathedral Ceilings', 'Rim Joists', 'Cantilevers', 'Outbuildings'],
     image: IMAGES.sprayFoamService,
-    imageAlt: 'Professional spray foam insulation applied uniformly between structural roof deck rafters in Houston',
+    imageAlt: 'Professional spray foam insulation application by Dr Foam Insulation Ltd in Ontario',
     featured: true,
   },
   {
     id: 'attic-insulation',
     index: '02',
-    name: 'Attic Insulation',
+    name: 'Attic Insulation & Air Sealing',
     shortTitle: 'Attic Insulation',
-    category: 'Upper Thermal Envelope & Heat Defense',
+    category: 'Roof Deck & Ceiling Planes',
     summary:
-      'Protect your home against extreme Houston summer attic heat transfer by upgrading the thermal barrier along your attic floor or roof deck.',
-    idealFor: 'Homes with warm upstairs rooms, aging or settled attic material, and high summer cooling demands.',
+      'Comprehensive attic thermal envelope sealing engineered to stop heated indoor air from escaping into the roof space during brutal Ontario winters and stop radiant heat baking during summers.',
+    idealFor:
+      'Existing homes with high heating bills, drafty upper floors, cold ceilings, and winter ice dam formation.',
     keyBenefits: [
-      'Slows downward heat transfer from sun-baked Texas roof decks into living spaces',
-      'Helps maintain more even temperatures between first and second floors',
-      'Reduces the daily workload on air conditioning equipment during hot afternoons',
-      'Supports improved overall energy efficiency throughout the year',
+      'Mitigates dangerous winter ice-damming along roof eaves and soffits',
+      'Reduces heavy winter heating loads and prevents summertime upper-floor heat traps',
+      'Seals critical bypasses around pot lights, plumbing stacks, and chimney chases',
+      'Helps stabilize energy demands across volatile seasonal weather swings',
     ],
-    applicationAreas: ['Attic floors & ceiling joists', 'Roof rafters & kneewalls', 'Attic access hatches & pull-down stairs'],
+    applicationAreas: ['Attic Flat Floors', 'Roof Deck Rafters', 'Soffit Transitions', 'Attic Access Hatches'],
     image: IMAGES.atticService,
-    imageAlt: 'Clean residential attic insulation installed between roof framing rafters in Houston TX',
+    imageAlt: 'Attic insulation and air sealing installation by Dr. Foam in an Ontario residential property',
     featured: true,
   },
   {
     id: 'residential-insulation',
     index: '03',
-    name: 'Residential Insulation',
-    shortTitle: 'Residential Insulation',
-    category: 'Home Comfort & Additions',
+    name: 'Residential & Cottage Insulation',
+    shortTitle: 'Residential & Cottages',
+    category: 'Homes & Waterfront Properties',
     summary:
-      'Tailored insulation solutions for single-family residences, townhomes, room additions, and whole-house energy retrofits across Houston.',
-    idealFor: 'Homeowners seeking better indoor comfort, quieter rooms, and improved temperature consistency.',
+      'Tailored insulation retrofits and upgrades for single-family homes, four-season waterfront cottages, chalets, and home additions throughout the Barrie-to-North Bay corridor.',
+    idealFor:
+      'Year-round homes, four-season converted cottages, drafty older houses, and room additions.',
     keyBenefits: [
-      'Addresses uneven room temperatures and hot or cold spots in the home',
-      'Helps dampen exterior noise from neighborhood traffic and storms',
-      'Customized solutions for exterior walls, bonus rooms over garages, and floors',
-      'Enhances year-round indoor living comfort for your family',
+      'Transforms drafty cottages into cozy, easily heated four-season retreats',
+      'Prevents cold bedroom floors over unconditioned crawlspaces or garages',
+      'Improves acoustic sound dampening between interior living areas and exterior wind',
+      'Protects plumbing pipes from freezing during severe sub-zero cold snaps',
     ],
-    applicationAreas: ['Single-family homes', 'Bonus rooms & garage ceilings', 'Home extensions & remodels'],
-    image: IMAGES.heroHome,
-    imageAlt: 'Houston Texas single-family home with energy-efficient residential insulation envelope',
-    featured: true,
+    applicationAreas: ['Whole-Home Envelopes', 'Cottage Additions', 'Basements', 'Crawlspaces', 'Bonus Rooms'],
+    image: IMAGES.wallService,
+    imageAlt: 'Residential and cottage insulation project in Muskoka and Ontario by Dr Foam',
   },
   {
     id: 'commercial-insulation',
     index: '04',
-    name: 'Commercial Insulation',
-    shortTitle: 'Commercial Insulation',
-    category: 'Commercial Buildings & Workspaces',
+    name: 'Commercial & Agricultural Insulation',
+    shortTitle: 'Commercial & Agricultural',
+    category: 'Commercial & Industrial',
     summary:
-      'Professional spray foam and thermal insulation services for commercial offices, retail properties, warehouses, metal buildings, and light industrial facilities.',
-    idealFor: 'Commercial property managers, business owners, and general contractors requiring reliable thermal performance.',
+      'Heavy-duty thermal and moisture insulation for commercial facilities, fabrication shops, agricultural barns, storage units, and steel-frame buildings.',
+    idealFor:
+      'Commercial warehouses, workshops, auto garages, agricultural structures, and multi-unit facilities.',
     keyBenefits: [
-      'Helps stabilize indoor temperatures across large open floor plans and high ceilings',
-      'Improves building air sealing to reduce conditioned air loss',
-      'Suitable for metal structures, concrete envelopes, and commercial rooflines',
-      'Supports efficient mechanical HVAC operation in commercial spaces',
+      'Controls temperature and eliminates metal roof condensation dripping in shops and barns',
+      'Reduces commercial HVAC operating overhead across expansive interior square footage',
+      'Reinforces structural rigidity when closed-cell foam adheres to metal and wood framing',
+      'Enables rapid application on large surfaces with minimal downtime to operations',
     ],
-    applicationAreas: ['Commercial roof decks', 'Metal building envelopes', 'Warehouse perimeter walls', 'Office workspaces'],
-    image: IMAGES.wallService,
-    imageAlt: 'Commercial building framing with high-density thermal insulation installed in Houston TX',
+    applicationAreas: ['Metal Buildings', 'Workshops', 'Commercial Units', 'Agricultural Barns', 'Warehouses'],
+    image: IMAGES.floorService,
+    imageAlt: 'Commercial spray foam application in an industrial shop building in Ontario',
   },
   {
     id: 'new-construction-renovation',
     index: '05',
     name: 'New Construction & Renovation',
-    shortTitle: 'New Construction & Renovation',
-    category: 'Framing Stage & Structural Retrofits',
+    shortTitle: 'New Construction & Renos',
+    category: 'Builders & Remodels',
     summary:
-      'Incorporate high-performance spray foam and thermal insulation during the framing phase of new builds, structural renovations, and major additions.',
-    idealFor: 'Custom home builders, remodelers, and property owners planning new construction or gut renovations.',
+      'Precision insulation planning and execution for custom home builders, renovation contractors, and property owners seeking code-exceeding building envelope performance.',
+    idealFor:
+      'New custom builds, gut-rehabs, basement finishes, kitchen/bath additions, and garage conversions.',
     keyBenefits: [
-      'Seamlessly seals the building envelope before drywall installation',
-      'Allows optimal access to all exterior framing, soffits, and ceiling junctions',
-      'Ensures modern thermal performance standards are built directly into the structure',
-      'Coordinates cleanly with general contractor and mechanical project timelines',
+      'Integrates cleanly into construction timelines before drywall installation',
+      'Creates an airtight building envelope that surpasses standard Ontario building code targets',
+      'Maximizes interior usable square footage with superior R-value per inch of stud depth',
+      'Provides peace of mind for homeowners and general contractors alike',
     ],
-    applicationAreas: ['New residential construction', 'Major home additions', 'Gut renovation projects', 'Custom builder specs'],
-    image: IMAGES.floorService,
-    imageAlt: 'Insulation installed during timber framing stage of a new construction home in Houston TX',
+    applicationAreas: ['Framing Stud Cavities', 'Cathedral Rafters', 'Basement Perimeter Walls', 'Garage Ceilings'],
+    image: IMAGES.wallService,
+    imageAlt: 'New construction framing spray foam insulation installed before drywalling',
   },
   {
-    id: 'energy-efficiency-improvements',
+    id: 'basement-crawlspace',
     index: '06',
-    name: 'Energy-Efficiency Improvements',
-    shortTitle: 'Energy-Efficiency Improvements',
-    category: 'Whole-Envelope Optimization',
+    name: 'Basement & Crawlspace Encapsulation',
+    shortTitle: 'Basements & Crawlspaces',
+    category: 'Foundation & Below-Grade',
     summary:
-      'Identify and address primary sources of heat transfer and air leakage across your building envelope to help improve overall property efficiency.',
-    idealFor: 'Properties with high energy consumption, continuous AC cycling, or noticeable draft patterns.',
+      'Complete moisture and thermal barrier systems for damp basements, stone foundations, and exposed crawlspaces typical of Central Ontario and cottage properties.',
+    idealFor:
+      'Cold foundation walls, rocky or dirt-floor crawlspaces, and cottages prone to freezing pipes.',
     keyBenefits: [
-      'Targets critical air bypasses around penetrations, wiring, and fixtures',
-      'Helps prevent convective air looping within hollow wall and ceiling assemblies',
-      'Supports steadier indoor climate control with less mechanical strain',
-      'Tailored recommendations based on your specific property construction',
+      'Stops ground moisture and humid drafts from migrating into living areas above',
+      'Warms up cold main-floor living spaces and eliminates drafty baseboards',
+      'Prevents foundation freeze-thaw damage and below-grade pipe freezing',
+      'Deters musty odors and damp conditions for a cleaner indoor air environment',
     ],
-    applicationAreas: ['Air leakage junctions', 'Chases & dropped soffits', 'Whole-property thermal boundaries'],
-    image: IMAGES.sprayFoamService,
-    imageAlt: 'Precision spray foam insulation sealing air gaps along building structural rafters',
+    applicationAreas: ['Poured Concrete Walls', 'Stone Foundations', 'Exposed Crawlspaces', 'Header Joists'],
+    image: IMAGES.floorService,
+    imageAlt: 'Basement foundation wall spray foam insulation in an Ontario home',
   },
 ];
 
 export const WHY_SPRAY_FOAM_PILLARS: BenefitPillar[] = [
   {
-    id: 'air-sealing',
+    id: 'pillar-air-sealing',
     index: '01',
-    title: 'Improved Air Sealing',
-    subtitle: 'Creates a Continuous Air Barrier',
+    title: 'Superior Air Sealing',
+    subtitle: 'Stops Invisible Air Leakage',
     description:
-      'Unlike fibrous materials that air can move through, spray foam expands on contact to fill irregular framing cavities, cracks, and penetrations. This helps create an effective air barrier that restricts uncontrolled air infiltration.',
+      'Unlike traditional batt insulation that air can filter through, spray foam expands up to 30–60 times its liquid volume to seal micro-cracks, electrical penetrations, and framing gaps.',
     scienceNote:
-      'Sealing air gaps can help prevent outdoor heat and Gulf Coast humidity from entering your conditioned spaces.',
+      'According to building science data, uncontrolled air leakage can account for up to 40% of heating and cooling energy loss.',
   },
   {
-    id: 'temp-consistency',
+    id: 'pillar-winter-warmth',
     index: '02',
-    title: 'Better Temperature Consistency',
-    subtitle: 'Reduce Hot & Cold Spots',
+    title: 'Warm in Winter, Cool in Summer',
+    subtitle: 'Year-Round Indoor Temperature Stability',
     description:
-      'By providing continuous coverage along rooflines and wall assemblies, spray foam helps eliminate thermal bridging and convective loops, supporting more uniform temperatures across different rooms and floors.',
+      'Engineered to withstand Ontario’s extreme seasonal climate swings—from -30°C winter cold snaps in North Bay to humid 32°C summer days in Barrie and Muskoka.',
     scienceNote:
-      'Helps upstairs rooms and perimeter walls maintain temperatures closer to your central thermostat setting.',
+      'Closed-cell spray foam maintains its thermal R-value even in sub-zero winter winds without compression or settling.',
   },
   {
-    id: 'unwanted-air-movement',
+    id: 'pillar-bill-stability',
     index: '03',
-    title: 'Reduced Unwanted Air Movement',
-    subtitle: 'Blocks Drafts & Dust Infiltration',
+    title: 'Steadier Energy Bills',
+    subtitle: 'No More Roller Coaster Utility Bills',
     description:
-      'Uncontrolled air movement carries heat, outdoor dust, and humidity into the building. Spray foam forms a tight seal around framing joints, electrical boxes, and plumbing runs to minimize draft pathways.',
+      'Your energy bill shouldn’t feel like it’s at Canada’s Wonderland. By creating a continuous thermal barrier, your heating and cooling systems operate with predictable, steady efficiency.',
     scienceNote:
-      'Restricting draft paths helps create a cleaner, more controlled indoor environment.',
+      'A tight thermal envelope dramatically lowers HVAC runtimes during peak winter heating and peak summer cooling periods.',
   },
   {
-    id: 'potential-savings',
+    id: 'pillar-moisture-barrier',
     index: '04',
-    title: 'Potential Energy Savings',
-    subtitle: 'Reduces HVAC Workload',
+    title: 'Moisture & Vapor Defense',
+    subtitle: 'Crucial for Ontario Lake Country',
     description:
-      'When your building envelope is well-sealed and insulated, cooled air stays inside longer. This can help reduce the continuous cycling demand on your air conditioning equipment during intense Houston summers.',
+      'Closed-cell spray foam acts as a certified vapor barrier in a single application, protecting wall assemblies and cottage framing against humid air infiltration and condensation.',
     scienceNote:
-      'Actual energy savings may vary depending on the property layout, HVAC equipment, and installation scope.',
+      'Resists water absorption and creates an impermeable seal against damp lakeside and river valley humidity.',
   },
   {
-    id: 'indoor-comfort',
+    id: 'pillar-ice-dam-protection',
     index: '05',
-    title: 'Improved Indoor Comfort',
-    subtitle: 'Steadier Living Spaces',
+    title: 'Attic Ice Dam Mitigation',
+    subtitle: 'Protect Your Roof & Eaves',
     description:
-      'A properly insulated building envelope helps keep interior wall surfaces and ceilings at more stable temperatures, reducing the radiant heat sensation you feel when sitting near exterior walls or beneath attics.',
+      'In cold climates, warm indoor air leaking into attics melts roof snow, creating heavy ice dams. Proper attic and rafter spray foam insulation keeps the roof deck cold and prevents roof damage.',
     scienceNote:
-      'Enhances comfort in bedrooms, bonus rooms above garages, and home office workspaces.',
+      'Eliminates warm convective air currents from entering the attic cavity, keeping snow melts uniform.',
   },
   {
-    id: 'long-term-performance',
+    id: 'pillar-longevity',
     index: '06',
-    title: 'Long-Term Insulation Performance',
-    subtitle: 'Resistant to Settling & Sagging',
+    title: 'Permanent Durability',
+    subtitle: 'Will Not Sag, Settle, or Degrade',
     description:
-      'Spray foam adheres directly to structural substrates, maintaining its shape and thermal coverage over time without sagging, compressing, or settling away from framing members.',
+      'Spray foam adheres securely to wood framing, concrete, and metal surfaces, remaining structurally sound for decades without sagging, shifting, or creating pest pathways.',
     scienceNote:
-      'Provides durable building envelope protection that maintains its integrity for years.',
+      'Forms a rigid, long-term bond that adds structural integrity to wall assemblies and roof decks.',
   },
 ];
 
-export const HOUSTON_PROPERTY_PILLARS: HoustonPropertyPillar[] = [
+export const ONTARIO_PROPERTY_PILLARS: OntarioPropertyPillar[] = [
   {
-    id: 'summer-attic-heat',
-    title: 'High Summer Temperatures & Radiant Attic Heat',
+    id: 'ont-winter',
+    title: 'Severe Ontario Sub-Zero Winters',
+    badge: 'Winter Defense',
     challenge:
-      'During Houston summers, direct sunlight on roof shingles can push attic temperatures well above 130°F. Without an effective thermal barrier, this heat conducts directly through ceilings into living spaces below.',
+      'Temperatures dropping below -25°C in Barrie, Muskoka, and North Bay create intense temperature differentials, forcing heating systems to run non-stop and generating massive draft currents.',
     solution:
-      'Applying spray foam insulation directly to the underside of the roof deck creates an unvented, conditioned attic space that keeps attic temperatures much closer to interior living conditions.',
-    highlight: 'Significantly slows downward heat transfer into second-floor bedrooms and living areas.',
+      'Dr. Foam applies high-density closed-cell spray foam to rim joists, exterior walls, and roof decks to eliminate drafts and retain radiant heat indoors.',
+    highlight: 'Keep heated air inside and stop heating bills from skyrocketing during deep winter freezes.',
   },
   {
-    id: 'gulf-coast-humidity',
-    title: 'Gulf Coast Humidity & Air Leakage',
+    id: 'ont-cottages',
+    title: 'Waterfront Cottages & Four-Season Conversions',
+    badge: 'Cottage Country',
     challenge:
-      'Southeast Texas experiences high ambient humidity. When humid outdoor air infiltrates hollow wall cavities and attic spaces, it introduces moisture and increases the cooling load on HVAC systems.',
+      'Many Muskoka, Parry Sound, and Lake Nipissing properties were built as seasonal retreats with crawlspaces, exposed joists, and minimal insulation that freeze rapidly.',
     solution:
-      'Spray foam acts as both a thermal insulator and an air barrier, helping seal framing joints and penetrations against humid outdoor air intrusion.',
-    highlight: 'Restricts moisture-laden outdoor air infiltration before it reaches indoor living spaces.',
+      'We insulate crawlspace foundations, cathedral ceilings, and unheated floors so cottage owners can enjoy comfortable four-season living without frozen pipes.',
+    highlight: 'Convert seasonal cabins into cozy, energy-efficient four-season retreats with year-round peace of mind.',
   },
   {
-    id: 'hvac-continuous-cycling',
-    title: 'HVAC Strain & Constant Cycling',
+    id: 'ont-ice-dams',
+    title: 'Attic Heat Escape & Heavy Ice Damming',
+    badge: 'Roof Protection',
     challenge:
-      'In unsealed or under-insulated properties, conditioned air quickly escapes through ceiling fixtures and bypasses, forcing air conditioning units to run almost continuously to keep up.',
+      'Warm air escaping through attic bypasses melts heavy snowpack on roofs, which refreezes at the cold eaves, forming dangerous ice dams and costly water leaks.',
     solution:
-      'Tightening the building envelope with spray foam reduces continuous thermal loss and air leaks, helping your cooling system maintain set points with less mechanical strain.',
-    highlight: 'Helps support efficient HVAC performance and less continuous runtime.',
+      'Air-sealing and spray foaming the attic floor or hot-roof deck seals air leaks, keeping the roof deck at exterior temperature and preventing ice buildup.',
+    highlight: 'Prevent water backup into ceilings, rot, and expensive roof repairs during heavy Ontario snowfalls.',
   },
   {
-    id: 'diverse-architecture',
-    title: 'Diverse Houston Residential & Commercial Architecture',
+    id: 'ont-summer',
+    title: 'Humid Ontario Summer Heat Loads',
+    badge: 'Summer Comfort',
     challenge:
-      'Houston properties range from historic pier-and-beam bungalows and 1970s suburban ranches to modern custom homes, commercial warehouses, and metal buildings with unique framing requirements.',
+      'July and August bring high humidity and hot sun that turns second-floor bedrooms and attics into thermal ovens, overburdening air conditioning units.',
     solution:
-      'Spray foam adapts to irregular framing shapes, deep roof pitches, metal building purlins, and subfloors to provide continuous coverage where conventional batts cannot fit tightly.',
-    highlight: 'Versatile application for new builds, remodels, metal buildings, and residential retrofits.',
+      'Spray foam blocks radiant heat transfer and humid outdoor air infiltration, allowing AC systems to keep the entire home evenly cool with less runtime.',
+    highlight: 'Maintain comfortable second floors and consistent room-to-room temperatures all summer long.',
   },
 ];
 
 export const PROCESS_STEPS: ProcessStep[] = [
   {
     number: '01',
-    title: 'Request an Estimate',
-    subtitle: 'Share Your Project Details',
+    title: 'Free Initial Consultation',
+    subtitle: 'Call 705-733-1163 or Request Online',
     description:
-      'Submit our online estimate form or call 713-497-1773. Tell us about your residential or commercial property in Houston and what areas you are looking to insulate.',
-    deliverable: 'Prompt initial consultation to review your goals and schedule an assessment',
+      'Contact Dr. Foam via phone or our quick estimate form. We discuss your property type, current draft or heating concerns, and project goals across our Barrie-to-North Bay service corridor.',
+    deliverable: 'Prompt consultation & project scope evaluation',
   },
   {
     number: '02',
-    title: 'Discuss Your Insulation Needs',
-    subtitle: 'On-Site Property Review',
+    title: 'Thermal Assessment & Prescription',
+    subtitle: 'Tailored Solution for Your Structure',
     description:
-      'We discuss your specific structure—whether an attic roof deck, exterior wall retrofit, new construction framing, or commercial space—to evaluate accessibility and thermal needs.',
-    deliverable: 'Clear evaluation of your property’s building envelope requirements',
+      'We evaluate your attic, walls, crawlspace, or construction blueprints to determine the ideal foam density (closed-cell vs open-cell), required R-value, and key air-sealing priority zones.',
+    deliverable: 'Transparent, detailed estimate with clear scope',
   },
   {
     number: '03',
-    title: 'Receive a Recommended Solution',
-    subtitle: 'Transparent, No-Obligation Estimate',
+    title: 'Precision Application',
+    subtitle: 'Clean, Safe & Certified Installation',
     description:
-      'We provide a straightforward recommendation tailored to your property, outlining the recommended spray foam or attic insulation scope with transparent pricing.',
-    deliverable: 'Detailed Free Estimate with clear scope of work and no high-pressure tactics',
+      'Our trained technicians protect your property, prep the application surface, and spray with calibrated equipment for a uniform, high-adhesion thermal and air barrier.',
+    deliverable: 'Airtight, seamless building envelope protection',
   },
   {
     number: '04',
-    title: 'Schedule the Work',
-    subtitle: 'Professional, Quality-Focused Execution',
+    title: 'Final Quality Check & Cleanup',
+    subtitle: 'Warm in Winter, Cool in Summer',
     description:
-      'Our team coordinates a convenient installation window, prepares the work area thoroughly, applies the insulation with precision, and completes a thorough cleanup of the site.',
-    deliverable: 'Completed insulation application focused on lasting comfort and performance',
+      'We inspect the entire application thickness, ensure all framing cavities are properly filled and trimmed where needed, and leave the workspace clean and ready for drywall or occupancy.',
+    deliverable: 'Verified coverage & lasting comfort reassurance',
   },
 ];
 
 export const TRUST_PILLARS: TrustItem[] = [
   {
-    title: 'Clear Communication',
+    title: 'Clear & Honest Communication',
     description:
-      'We explain our recommendations in plain English, discuss what spray foam can and cannot do for your property, and provide transparent written estimates.',
-    tag: 'Straightforward Service',
+      'No confusing jargon or aggressive sales tactics. Dr. Foam provides transparent recommendations tailored specifically to your building envelope and budget.',
+    tag: 'Transparent Service',
   },
   {
-    title: 'Professional Service',
+    title: 'Regional Ontario Climate Expertise',
     description:
-      'From initial phone call to project cleanup, we treat your home or commercial building with respect, maintaining clean work areas and prompt scheduling.',
-    tag: 'Dedicated Craftsmanship',
+      'From the shores of Lake Simcoe in Barrie to the rugged shield of North Bay and Muskoka, we understand the specific challenges of Central Ontario weather.',
+    tag: 'Barrie to North Bay',
   },
   {
-    title: 'Quality-Focused Approach',
+    title: 'Quality-Focused Equipment & Materials',
     description:
-      'We use proper application techniques and site preparation to ensure uniform coverage, effective adhesion, and durable building-envelope sealing.',
-    tag: 'Reliable Standards',
+      'We use top-tier spray foam formulations engineered for Canadian climates, applied with professional high-pressure proportioners for consistent density and maximum adhesion.',
+    tag: 'Premium Formulations',
   },
   {
-    title: 'Houston-Focused Service',
+    title: 'Residential & Commercial Versatility',
     description:
-      'We understand the specific insulation challenges posed by Houston’s intense summer heat, high attic temperatures, and Gulf Coast humidity.',
-    tag: 'Local Climate Focus',
+      'Whether insulating a custom lakefront cottage, an existing family home, an auto repair shop, or a new commercial development, Dr. Foam has the equipment and expertise to execute.',
+    tag: 'Full-Scope Capability',
   },
 ];
 
 export const FAQ_ITEMS: FaqItem[] = [
   {
     id: 'faq-what-is',
-    category: 'General Basics',
-    question: 'What is spray foam insulation?',
+    category: 'Basics',
+    question: 'What is spray foam insulation and how does it work?',
     answer:
-      'Spray foam insulation is a high-performance material applied as a liquid that quickly expands to fill framing cavities, gaps, and voids. Once cured, it creates a continuous thermal insulation layer and an effective air barrier that helps restrict unwanted air movement and heat transfer.',
+      'Spray foam insulation is a modern insulation material that is applied as a liquid and expands rapidly within seconds to fill every crack, crevice, and framing cavity. As it expands and cures, it creates an airtight thermal and moisture barrier that stops air infiltration far more effectively than traditional fiberglass batt insulation.',
   },
   {
-    id: 'faq-where-installed',
-    category: 'Applications',
-    question: 'Where can spray foam insulation be installed?',
+    id: 'faq-service-area',
+    category: 'Service Area',
+    question: 'What areas does Dr Foam Insulation Ltd. service?',
     answer:
-      'Spray foam insulation is commonly installed along residential and commercial attic roof decks, exterior wall cavities, band and rim joists, crawl spaces and subfloors, as well as metal buildings, commercial warehouses, and new construction framing.',
+      'Dr Foam Insulation proudly services properties across Ontario from Barrie to North Bay. This includes Barrie, Innisfil, Orillia, Midland, Gravenhurst, Bracebridge, Huntsville, Lake of Bays, Muskoka, Parry Sound, Sundridge, Burk’s Falls, North Bay, Callander, and surrounding cottage country communities.',
   },
   {
-    id: 'faq-suitable-attics',
-    category: 'Attic Solutions',
-    question: 'Is spray foam insulation suitable for attics?',
+    id: 'faq-closed-open',
+    category: 'Science',
+    question: 'What is the difference between closed-cell and open-cell spray foam?',
     answer:
-      'Yes. Spray foam is frequently applied to the underside of attic roof decks to create an unvented (conditioned) attic assembly. In Houston, this can significantly reduce attic heat buildup and help keep upper-floor living spaces more comfortable during peak summer weather.',
+      'Closed-cell spray foam is a dense, rigid foam with high R-value (typically ~R-6 to R-7 per inch) that acts as an air barrier, moisture vapor barrier, and adds structural strength. It is ideal for exterior walls, crawlspaces, cathedral roofs, and metal buildings. Open-cell foam is lighter, highly flexible, and excellent for interior sound deadening and dry attic flat applications.',
   },
   {
-    id: 'faq-which-solution',
-    category: 'Consultation',
-    question: 'How do I know which insulation solution I need?',
+    id: 'faq-ice-dams',
+    category: 'Ontario Winters',
+    question: 'Can spray foam insulation help prevent roof ice dams in winter?',
     answer:
-      'The right solution depends on your property type, existing insulation condition, architectural framing, and comfort concerns. When you contact Houston Spray Foam Insulation, we discuss your property details and recommend an appropriate scope—whether targeting the attic roof deck, exterior walls, or whole building envelope.',
+      'Yes! Ice dams occur when warm air leaks from the living areas into the attic, warming the roof deck and melting snow from below, which then refreezes at the cold eaves. Spray foaming the attic floor or roof rafters seals air leaks and keeps the roof deck cool, effectively mitigating the root cause of ice damming.',
   },
   {
-    id: 'faq-how-estimate',
-    category: 'Estimates & Pricing',
-    question: 'How can I request an estimate?',
+    id: 'faq-cottage-four-season',
+    category: 'Cottages',
+    question: 'Can Dr. Foam help convert our three-season cottage into a four-season home?',
     answer:
-      'You can request a complimentary estimate by filling out our simple online quote form on this page or by calling us directly at 713-497-1773 during normal business hours (Monday – Friday). We will discuss your project details and provide a no-obligation quote.',
+      'Absolutely. One of our specialties is four-season cottage retrofits. Spray foaming the crawlspace, rim joists, exterior walls, and roof decks provides the necessary thermal barrier and air seal to keep plumbing pipes from freezing and allow easy, cost-effective heating during Ontario winters.',
   },
   {
-    id: 'faq-res-comm',
-    category: 'Property Types',
-    question: 'Do you provide residential and commercial insulation services?',
+    id: 'faq-estimate-process',
+    category: 'Estimates',
+    question: 'How do I request a free estimate from Dr. Foam?',
     answer:
-      'Yes. Houston Spray Foam Insulation serves residential properties (including single-family homes, townhomes, additions, and renovations) as well as commercial properties (including offices, metal buildings, retail spaces, and warehouses) throughout Houston, TX.',
+      'You can call us directly at 705-733-1163, email sales.drfoam@gmail.com, or fill out the free estimate form right here on drfoam.ca. We’ll discuss your project requirements and provide a clear, prompt quote.',
+  },
+  {
+    id: 'faq-residential-commercial',
+    category: 'Scope',
+    question: 'Do you handle both residential and commercial projects?',
+    answer:
+      'Yes, Dr Foam Insulation Ltd. handles residential homes, cottages, and additions, as well as commercial warehouses, agricultural barns, workshops, and new construction developments across Central Ontario.',
   },
 ];
